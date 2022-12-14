@@ -1,16 +1,29 @@
 from flask import Flask, request, jsonify 
-from models import Subdomain, create_engine, Base, sessionmaker
+from api_files.models import Subdomain, create_engine, Base, sessionmaker
 import subprocess, sys 
 from flask_cors import CORS
+from python_digitalocean import digitalocean
+import os
 
 app = Flask(__name__)
 CORS(app)
 
-engine = create_engine("sqlite:///paas.db", connect_args={'check_same_thread': False})
+engine = create_engine("sqlite:///api_files/paas.db", connect_args={'check_same_thread': False})
 Base.metadata.create_all(bind=engine)
 
 session = sessionmaker(bind=engine)
 session = session()
+
+TOKEN="dop_v1_02aa3f24caa7c665d082dad0bfa9fc67f79652a917f230eb99c50342da459024"
+domain = digitalocean.Domain(token=TOKEN, name="techcamp.app")
+records = domain.get_records()
+for r in records:
+    print(r.type, r.data)
+
+manager = digitalocean.Manager(token=TOKEN)
+my_projects = manager.get_all_projects()
+resources = my_projects[0].get_all_resources()
+print(resources)
 
 def add_subdomain(name,user):
       add_domain = Subdomain(name, user)
@@ -18,30 +31,45 @@ def add_subdomain(name,user):
       session.commit()
       return jsonify("Domain Stored Successfuly"),201
 
-def deploy_ssh_subprocess(github_url):
-    #RUN POWERSHELL AS ADMIN "Set-ExecutionPolicy RemoteSigned"
-    deploy_steps = [
-        'git clone '+ github_url,,
-        'cp Dockerfile'
-        'cp docker-compose.yml'
-        'docker build -t subdomain'
-        'docker run -p 5001:80 -t subdomain'
-        'cp /etc/sites-available/subdomain.techcamp.co.ke'
-        'restart nginx',
-        'run script to put lets-encrypt/autorenew'
-    ]
-    #1. Write the deployment in a txt file with the name deploy_subdomain.txt. Echo a final text in the
+def deploy_ssh_subprocess(github_url, subdomain):
+    error_in_step = 0
+    #In windows RUN POWERSHELL AS ADMIN and run command "Set-ExecutionPolicy RemoteSigned"
 
-    #2. Create a new wroute that is reading that txt file
+    #1. Write the deployment in a txt file with the name deploy_subdomain.txt. Echo a final text in the end to check IF statement
 
-    #3. Check the route every 5 secs, check if for the final part to stop the loop.Print out the echos in frontend to show progress in deploy_steps variable above
+    #2. Create a new route that is reading that txt file
 
-    #4.Delete the txt command after success deployment
+    #3. Check the route every 5 secs, check if error_in_step has changed to stop. Check in frontend to show progress in deploy_steps variable above
 
-    p = subprocess.run(deploy_steps, capture_output=True, shell = True)
-    print(p)
-  
-        
+    os.chdir('deployed_apps')
+    clone_git_subdomain= 'git clone https://github.com/kailikia/paas-app.git' + " "+ subdomain
+    print(clone_git_subdomain)
+
+    #step 1: change directory to deployed_apps for subdomain
+    if os.path.isdir(subdomain):
+        os.system('rmdir /S /Q "{}"'.format(subdomain))
+        print("Deployment 1: -----", "Deleted time deployment for subdomain")
+
+    else:
+         #Edit txt to : Project cloned successfully 
+        print("Deployment 1: -----", "First time deployment for subdomain")
+
+    #step 2: Clone into sundomain directory
+    if subprocess.run(clone_git_subdomain, shell=True).returncode == 0:
+        #Edit txt to : Project cloned successfully 
+        print("Deployment 2: -----","Project cloned successfully")
+    else:
+        print("Deployment 2: -----", "Error in accessing Git Repository ")
+
+    #step 3: copy nginx, Dockerfile, and docker-compose files into the diretory.
+
+       #step 3.2: build docker file with sudbomain name
+
+        #step 3.3: run container using docker image created using subdomain
+
+    #RETURN BACK TO ROUTE
+    os.chdir('..')
+
 
 @app.route('/')
 def hello():
@@ -74,7 +102,7 @@ def deploy_app():
        #2. Call DO API to create subdomain and attach to subdomain and add A record as expected
 
        #2. Start SSH or Powershell Script to deploy app
-       res = deploy_ssh_subprocess(github_url)
+       res = deploy_ssh_subprocess(github_url, subdomain)
       
        #3. Create db 
 
