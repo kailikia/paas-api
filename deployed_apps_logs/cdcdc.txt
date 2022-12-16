@@ -1,1 +1,0 @@
-[{"step" : 1, "message" : "First time deployment for cdcdc"},{"step" : 2, "message" : "Project cdcdc cloned successfully"}]
