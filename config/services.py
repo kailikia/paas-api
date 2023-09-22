@@ -76,7 +76,7 @@ def deploy_ssh_subprocess(github_url, subdomain):
         myfile.write(',{"step" : 2, "message" : "Error cloning project '+subdomain +'."}')
 
     #Steps Task: Write and log in myfile as above
-    #         3. Create an app folder and copy all files inside it. 
+    #         3. Create an app folder and copy all files inside it. delete .git files 
     #         4. Then copy generic requirements.txt, Dockerfile, docker-compose and mybuildscript.sh
     #         5. Create an nginx string with variables {port} {sub domain} concatenated and add to an ngix-config file.
     #            call the file subdomain.techcamp.app. Add it to etc/nginx/sites-available.
