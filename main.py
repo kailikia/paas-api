@@ -52,7 +52,7 @@ def deploy_app():
             session.commit()
 
             #3. Call DO API to create subdomain and attach to subdomain and add A record as expected
-            do_response = digital_ocean_create_subdomain(subdomain) 
+            # do_response = digital_ocean_create_subdomain(subdomain) 
 
             return jsonify({"message":"sub domain added and app deployed succcessfully","status": 1}),200
         except Exception as e:
