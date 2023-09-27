@@ -1,1 +1,1 @@
-[{"step" : 1, "message" : "Subdomain Domain Created for daff"},{"step" : 2, "message" : "Project daff cloned successfully"}]
+[{"step" : 1, "message" : "Subdomain Domain Re-Created for daff"},{"step" : 2, "message" : "Project daff cloned successfully"},{"step" : 3, "message" : "Project daff copied into app folder successfully"},{"step" : 4, "message" : "Project daff config files added successfully"}]

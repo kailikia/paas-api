@@ -1,1 +1,1 @@
-[{"step" : 1, "message" : "Subdomain Domain Re-Created for gadaffi"},{"step" : 2, "message" : "Project gadaffi cloned successfully"}]
+[{"step" : 1, "message" : "Subdomain Domain Re-Created for gadaffi"},{"step" : 2, "message" : "Project gadaffi cloned successfully"},{"step" : 3, "message" : "Project gadaffi copied into app folder successfully"},{"step" : 4, "message" : "Project gadaffi config files added successfully"}]

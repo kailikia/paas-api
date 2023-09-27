@@ -3,9 +3,14 @@ from flask_cors import CORS
 import concurrent.futures
 from config.services import *
 import json
+from dotenv import load_dotenv, find_dotenv
+
 
 app = Flask(__name__)
 CORS(app)
+
+load_dotenv(find_dotenv())
+
 
 @app.route('/')
 def hello():
