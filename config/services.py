@@ -55,7 +55,9 @@ def deploy_ssh_subprocess(github_url, subdomain):
 
     config_dir = os.path.dirname(os.path.abspath(__file__)) 
     logs_dir = os.path.dirname(config_dir)    
-    deploy_subdomain_logs = "../deployed_apps_logs", subdomain+".txt"
+    # deploy_subdomain_logs = "../deployed_apps_logs", subdomain+".txt"
+    deploy_subdomain_logs = os.path.join("deployed_apps_logs", subdomain+".txt")
+
 
     #Delete existing log contents
     open(deploy_subdomain_logs, 'w+').close()
