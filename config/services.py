@@ -48,21 +48,21 @@ def deploy_ssh_subprocess(github_url, subdomain):
     if os.path.exists(subdomain):
         shutil.rmtree(subdomain)  # Remove the existing subdomain directory
 
-    #check size of file uploaded. If 
-    clone_path = os.path.join(subdomain, 'app')
-    # git_subdomain= 'git clone https://github.com/kailikia/paas-app.git' + " "+ destination_path
-    git_subdomain= f'git clone {github_url}' + " "+ clone_path 
+        #check size of file uploaded. If 
+        clone_path = os.path.join(subdomain, 'app')
+        # git_subdomain= 'git clone https://github.com/kailikia/paas-app.git' + " "+ destination_path
+        git_subdomain= f'git clone {github_url}' + " "+ clone_path 
 
-    config_dir = os.path.dirname(os.path.abspath(__file__)) 
-    logs_dir = os.path.dirname(config_dir)    
-    deploy_subdomain_logs = os.path.join( logs_dir, "deployed_apps_logs", subdomain+".txt") 
+        config_dir = os.path.dirname(os.path.abspath(__file__)) 
+        logs_dir = os.path.dirname(config_dir)    
+        deploy_subdomain_logs = os.path.join( logs_dir, "deployed_apps_logs", subdomain+".txt") 
 
-    #Delete existing log contents
-    open(deploy_subdomain_logs, 'w+').close()
+        #Delete existing log contents
+        open(deploy_subdomain_logs, 'w+').close()
 
-    #initiate empty list in logs
-    with open(deploy_subdomain_logs, "a") as myfile:
-            myfile.write('[')
+        #initiate empty list in logs
+        with open(deploy_subdomain_logs, "a") as myfile:
+                myfile.write('[')
 
     #STEP 1: change directory to deployed_apps for subdomain
     if os.path.isdir(subdomain):
