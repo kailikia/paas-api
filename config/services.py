@@ -43,7 +43,7 @@ def deploy_ssh_subprocess(github_url, subdomain):
     #3. Check the route every 5 secs, check if error_in_step has changed to stop. Check in frontend to show progress in deploy_steps variable above
 
     #Change directory
-    os.chdir('deployed_apps')
+    # os.chdir('deployed_apps')
 
     if os.path.exists(subdomain):
         shutil.rmtree(subdomain)  # Remove the existing subdomain directory
@@ -55,8 +55,7 @@ def deploy_ssh_subprocess(github_url, subdomain):
 
     config_dir = os.path.dirname(os.path.abspath(__file__)) 
     logs_dir = os.path.dirname(config_dir)    
-    path = os.path.join(logs_dir, "deployed_apps_logs", subdomain+".txt")
-    deploy_subdomain_logs = os.path.join( path) 
+    deploy_subdomain_logs = os.path.join( logs_dir, "deployed_apps_logs", subdomain+".txt") 
 
     #Delete existing log contents
     open(deploy_subdomain_logs, 'w+').close()
