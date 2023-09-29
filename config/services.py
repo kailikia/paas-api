@@ -50,7 +50,11 @@ def deploy_ssh_subprocess(github_url, subdomain):
     # git_subdomain= 'git clone https://github.com/kailikia/paas-app.git' + " "+ destination_path
     git_subdomain= f'git clone {github_url}' + " "+ clone_path 
 
-    # os.chdir('deployed_apps_logs')
+    if os.path.exists(subdomain):
+            # If it exists, replace its content with new content
+            shutil.rmtree(subdomain)  # Remove the existing directory
+            print(f"Replaced content for subdomain: {subdomain}")
+
     deploy_subdomain_logs = os.path.join("deployed_apps_logs", subdomain+".txt") 
 
     #Delete existing log contents
@@ -64,6 +68,8 @@ def deploy_ssh_subprocess(github_url, subdomain):
     if os.path.isdir(subdomain):
         #Delete existing subdomain project 
         os.system('rmdir /S /Q "{}"'.format(subdomain))
+        # Check if the subdomain directory exists
+        
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write('{"step" : 1, "message" : "Subdomain Domain Created for ' + subdomain+'"}')
     else:
@@ -94,6 +100,8 @@ def deploy_ssh_subprocess(github_url, subdomain):
                 if file == 'Procfile':
                     os.remove(os.path.join(root, file))
                 if file == '.gitignore':
+                    os.remove(os.path.join(root, file))
+                if file == '.git':
                     os.remove(os.path.join(root, file))
 
         with open(deploy_subdomain_logs, "a") as myfile:
