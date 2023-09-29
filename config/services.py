@@ -133,7 +133,7 @@ def deploy_ssh_subprocess(github_url, subdomain):
     #call the file subdomain.techcamp.app. Add it to etc/nginx/sites-available.
     if platform.system() == 'Linux':
 
-        files = os.listdir( logs_dir, 'deployed_apps_logs')
+        files = os.listdir('deployed_apps_logs')
         # Count the number of files (excluding directories)
         file_count = sum(1 for file_name in files if os.path.isfile(os.path.join( logs_dir, 'deployed_apps_logs', file_name)))
         port = 5001 + file_count
