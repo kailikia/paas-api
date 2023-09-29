@@ -55,7 +55,7 @@ def deploy_ssh_subprocess(github_url, subdomain):
 
     config_dir = os.path.dirname(os.path.abspath(__file__)) 
     logs_dir = os.path.dirname(config_dir)    
-    deploy_subdomain_logs = os.path.join( logs_dir, "deployed_apps_logs", subdomain+".txt") 
+    deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain+".txt") 
 
     #Delete existing log contents
     open(deploy_subdomain_logs, 'w+').close()
@@ -148,9 +148,11 @@ def deploy_ssh_subprocess(github_url, subdomain):
                     }}
                 
                 # Your additional Nginx configuration goes here
+
             }}
+
             """
-        nginx_config_path = f"../etc/nginx/conf.d/{subdomain}.techcamp.app"
+        nginx_config_path = f"../etc/nginx/conf.d/{subdomain}"
         try:
             with open(nginx_config_path, 'w') as config_file:
                 config_file.write(nginx_config)
