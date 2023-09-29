@@ -45,13 +45,13 @@ def deploy_ssh_subprocess(github_url, subdomain):
     #Change directory
     os.chdir('deployed_apps')
 
+    if os.path.exists(subdomain):
+        shutil.rmtree(subdomain)  # Remove the existing subdomain directory
+
     #check size of file uploaded. If 
     clone_path = os.path.join(subdomain, 'app')
     # git_subdomain= 'git clone https://github.com/kailikia/paas-app.git' + " "+ destination_path
     git_subdomain= f'git clone {github_url}' + " "+ clone_path 
-
-    if os.path.exists(subdomain):
-        shutil.rmtree(subdomain)  # Remove the existing subdomain directory
 
     config_dir = os.path.dirname(os.path.abspath(__file__)) 
     logs_dir = os.path.dirname(config_dir)    
