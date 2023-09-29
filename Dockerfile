@@ -5,8 +5,6 @@ COPY requirements.txt /tmp/
 
 # upgrade pip and install required python packages
 RUN pip install -U pip
-RUN apt install 
-RUN apt install nano
 
 RUN pip install -r /tmp/requirements.txt
 
