@@ -51,11 +51,11 @@ def deploy_ssh_subprocess(github_url, subdomain):
     git_subdomain= f'git clone {github_url}' + " "+ clone_path 
 
     if os.path.exists(subdomain):
-            # If it exists, replace its content with new content
-            shutil.rmtree(subdomain)  # Remove the existing directory
-            print(f"Replaced content for subdomain: {subdomain}")
+        shutil.rmtree(subdomain)  # Remove the existing subdomain directory
 
-    deploy_subdomain_logs = os.path.join("deployed_apps_logs", subdomain+".txt") 
+    config_dir = os.path.dirname(os.path.abspath(__file__)) 
+    logs_dir = os.path.dirname(config_dir)    
+    deploy_subdomain_logs = os.path.join( logs_dir, "deployed_apps_logs", subdomain+".txt") 
 
     #Delete existing log contents
     open(deploy_subdomain_logs, 'w+').close()
@@ -101,8 +101,8 @@ def deploy_ssh_subprocess(github_url, subdomain):
                     os.remove(os.path.join(root, file))
                 if file == '.gitignore':
                     os.remove(os.path.join(root, file))
-                if file == '.git':
-                    os.remove(os.path.join(root, file))
+                # if file == '.git':
+                #     os.remove(os.path.join(root, file))
 
         with open(deploy_subdomain_logs, "a") as myfile:
                 myfile.write(',{"step" : 3, "message" : "Project '+subdomain +' copied into app folder successfully"}')
@@ -123,27 +123,29 @@ def deploy_ssh_subprocess(github_url, subdomain):
             shutil.copy(src_file, dest_file)
 
         with open(deploy_subdomain_logs, "a") as myfile:
-                myfile.write(',{"step" : 4, "message" : "Project '+subdomain +' config files added successfully"}')
+                myfile.write(',{"step" : 4, "message" : "Project '+subdomain +' [requirements.txt, Dockerfile, docker-compose and mybuildscript.sh] files added successfully"}')
 
     except :
-        myfile.write(',{"step" : 4, "message" : "Error adding config files to project '+subdomain +'."}')
+        myfile.write(',{"step" : 4, "message" : "Error adding [requirements.txt, Dockerfile, docker-compose and mybuildscript.sh] files to project '+subdomain +'."}')
 
 
     #STEP 5 : Create an nginx string with variables {port} {subdomain} concatenated and add to an ngix-config file.
     #call the file subdomain.techcamp.app. Add it to etc/nginx/sites-available.
     if platform.system() == 'Linux':
 
-        files = os.listdir('deployed_apps_logs')
+        files = os.listdir( logs_dir, 'deployed_apps_logs')
         # Count the number of files (excluding directories)
-        file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('deployed_apps_logs', file_name)))
-        
+        file_count = sum(1 for file_name in files if os.path.isfile(os.path.join( logs_dir, 'deployed_apps_logs', file_name)))
         port = 5001 + file_count
 
         # Define the Nginx configuration content with variables
         nginx_config = f"""
             server {{
-                listen {port};
                 server_name {subdomain}.techcamp.app;
+
+                location /{{
+                    proxy_pass http://46.101.2.132:{port};
+                    }}
                 
                 # Your additional Nginx configuration goes here
             }}
@@ -152,20 +154,17 @@ def deploy_ssh_subprocess(github_url, subdomain):
         try:
             with open(nginx_config_path, 'w') as config_file:
                 config_file.write(nginx_config)
-        
-            print(f"Nginx configuration file created at {nginx_config_path}")
 
             with open(deploy_subdomain_logs, "a") as myfile:
-                myfile.write(',{"step" : 5, "message" : "Project '+subdomain +' configured successfully"}')
+                myfile.write(',{"step" : 5, "message" : "Nginx server block for '+subdomain +'.techcamp.app file created."}')
 
         except OSError as e:
-            print(f"Error creating Nginx configuration file: {e}")
+             myfile.write(',{"step" : 5, "message" : "Error adding Nginx server block for '+subdomain +'.techcamp.app"}')
 
     else :
         myfile.write(',{"step" : 5, "message" : "Error configuring project '+subdomain +'. "}')
-        print("This code is not running on a Linux operating system.")
 
-    #STEP 6 :  Refresh the nginx.
+    #STEP 6 : Test and  Refresh the nginx.
     try:
         sites_enabled_path = "/etc/nginx/sites-enabled"
         if os.path.exists(nginx_config_path):
