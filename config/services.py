@@ -150,7 +150,7 @@ def deploy_ssh_subprocess(github_url, subdomain):
                 # Your additional Nginx configuration goes here
             }}
             """
-        nginx_config_path = f"/etc/nginx/sites-available/{subdomain}.techcamp.app"
+        nginx_config_path = f"../etc/nginx/sites-available/{subdomain}.techcamp.app"
         try:
             with open(nginx_config_path, 'w') as config_file:
                 config_file.write(nginx_config)
@@ -166,7 +166,7 @@ def deploy_ssh_subprocess(github_url, subdomain):
 
     #STEP 6 : Test and  Refresh the nginx.
     try:
-        sites_enabled_path = "/etc/nginx/sites-enabled"
+        sites_enabled_path = "../etc/nginx/sites-enabled"
         if os.path.exists(nginx_config_path):
             # Create a symbolic link in sites-enabled
             site_enabled_link = os.path.join(sites_enabled_path, subdomain)
