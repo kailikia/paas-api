@@ -43,21 +43,16 @@ def deploy_ssh_subprocess(github_url, subdomain):
     #3. Check the route every 5 secs, check if error_in_step has changed to stop. Check in frontend to show progress in deploy_steps variable above
 
     #Change directory
-    # os.chdir('deployed_apps')
-
-    if os.path.exists(subdomain):
-        shutil.rmtree(subdomain)  # Remove the existing subdomain directory
+    os.chdir('deployed_apps')
 
     #check size of file uploaded. If 
     clone_path = os.path.join(subdomain, 'app')
     # git_subdomain= 'git clone https://github.com/kailikia/paas-app.git' + " "+ destination_path
-    git_subdomain= f'git clone {github_url}' + " "+ clone_path 
-
-    config_dir = os.path.dirname(os.path.abspath(__file__)) 
-    logs_dir = os.path.dirname(config_dir)    
+    depth = 1
+    git_subdomain= f"git clone --depth {depth} {github_url} {clone_path} "
+  
     # deploy_subdomain_logs = "../deployed_apps_logs", subdomain+".txt"
-    deploy_subdomain_logs = os.path.join("deployed_apps_logs", subdomain+".txt")
-
+    deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain+".txt")
 
     #Delete existing log contents
     open(deploy_subdomain_logs, 'w+').close()
@@ -82,6 +77,7 @@ def deploy_ssh_subprocess(github_url, subdomain):
 
     #STEP 2: Clone into subdomain app directory
     if subprocess.run(git_subdomain, shell=True).returncode == 0:
+ 
         #Edit txt to : Project cloned successfully 
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(',{"step" : 2, "message" : "Project '+subdomain +' cloned successfully"}')
@@ -133,89 +129,99 @@ def deploy_ssh_subprocess(github_url, subdomain):
 
     #STEP 5 : Create an nginx string with variables {port} {subdomain} concatenated and add to an ngix-config file.
     #call the file subdomain.techcamp.app. Add it to etc/nginx/sites-available.
+
+    files = os.listdir('../deployed_apps_logs')
+    # Count the number of files (excluding directories)
+    file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
+    port = 5001 + file_count
+
+    # Define the Nginx configuration content with variables
+    nginx_config = f"""
+        server {{
+            server_name {subdomain}.techcamp.app;
+
+            location /{{
+                proxy_pass http://46.101.2.132:{port};
+                }}
+            
+            # Your additional Nginx configuration goes here
+
+        }}
+
+        """
+    nginx_files = f"../nginx_files/{subdomain}"
+    try:
+        with open(nginx_files, 'w') as nginx_file:
+            nginx_file.write(nginx_config)
+
+        with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(',{"step" : 5, "message" : "Nginx server block for '+subdomain +'.techcamp.app file created."}')
+
+    except OSError as e:
+        with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(',{"step" : 5, "message" : "Error adding Nginx server block for '+subdomain +'.techcamp.app"}')
+
+
+    #STEP 6 : Run NGINX container and expose nginx files scripts and reload nginx.
     if platform.system() == 'Linux':
 
-        files = os.listdir('deployed_apps_logs')
-        # Count the number of files (excluding directories)
-        file_count = sum(1 for file_name in files if os.path.isfile(os.path.join( logs_dir, 'deployed_apps_logs', file_name)))
-        port = 5001 + file_count
-
-        # Define the Nginx configuration content with variables
-        nginx_config = f"""
-            server {{
-                server_name {subdomain}.techcamp.app;
-
-                location /{{
-                    proxy_pass http://46.101.2.132:{port};
-                    }}
-                
-                # Your additional Nginx configuration goes here
-
-            }}
-
-            """
-        nginx_config_path = f"../etc/nginx/conf.d/{subdomain}"
         try:
-            with open(nginx_config_path, 'w') as config_file:
-                config_file.write(nginx_config)
+            sites_enabled_path = "../etc/nginx/nginx.conf"
+            if os.path.exists(nginx_files):
+                # Create a symbolic link in sites-enabled
+                site_enabled_link = os.path.join(sites_enabled_path, subdomain)
+                
+                try:
+                    os.symlink(nginx_files, site_enabled_link)
+                    print(f"Enabled site: {subdomain}")
 
+                    # Reload Nginx to apply the configuration changes
+                    if os.system("sudo nginx -t") == 0:
+                        os.system("sudo systemctl reload nginx")
+                        print("Nginx reloaded successfully.")
+
+                    with open(deploy_subdomain_logs, "a") as myfile:
+                        myfile.write(',{"step" : 6, "message" : "Project '+subdomain +' web server test successful"}')
+
+                except OSError as e:
+                    print(f"Error creating symbolic link or reloading Nginx: {e}")
+            else:
+                print(f"Site configuration file '{subdomain}' not found in sites-available.")
+
+        
+        except :
             with open(deploy_subdomain_logs, "a") as myfile:
-                myfile.write(',{"step" : 5, "message" : "Nginx server block for '+subdomain +'.techcamp.app file created."}')
-
-        except OSError as e:
-             myfile.write(',{"step" : 5, "message" : "Error adding Nginx server block for '+subdomain +'.techcamp.app"}')
-
-    else :
-        myfile.write(',{"step" : 5, "message" : "Error configuring project '+subdomain +'. "}')
-
-    #STEP 6 : Test and  Refresh the nginx.
-    try:
-        sites_enabled_path = "../etc/nginx/nginx.conf"
-        if os.path.exists(nginx_config_path):
-            # Create a symbolic link in sites-enabled
-            site_enabled_link = os.path.join(sites_enabled_path, subdomain)
-            
-            try:
-                os.symlink(nginx_config_path, site_enabled_link)
-                print(f"Enabled site: {subdomain}")
-
-                # Reload Nginx to apply the configuration changes
-                if os.system("sudo nginx -t") == 0:
-                    os.system("sudo systemctl reload nginx")
-                    print("Nginx reloaded successfully.")
-
-                with open(deploy_subdomain_logs, "a") as myfile:
-                    myfile.write(',{"step" : 6, "message" : "Project '+subdomain +' web server test successful"}')
-
-            except OSError as e:
-                print(f"Error creating symbolic link or reloading Nginx: {e}")
-        else:
-            print(f"Site configuration file '{subdomain}' not found in sites-available.")
-
-       
-    except :
-        myfile.write(',{"step" : 6, "message" : "Error reloading web server project '+subdomain +'."}')
+                myfile.write(',{"step" : 6, "message" : "Error reloading web server project '+subdomain +'."}')
+    else:
+        with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(',{"step" : 6, "message" : "Error youre not in a nginx server for project '+subdomain +'."}')
 
 
     #STEP 7 : Run mybuildscript.sh
-    script_path = os.path.join(subdomain, "mybuildscript.sh")
+    if platform.system() == 'Linux':
 
-    try:
-        # Run the shell script using subprocess
-        subprocess.run(["chmod", "+x", script_path], check=True)
-        subprocess.run(["bash", script_path], check=True)
-        print("Shell script executed successfully.")
+        script_path = os.path.join(subdomain, "mybuildscript.sh")
 
+        try:
+            # Run the shell script using subprocess
+            subprocess.run(["chmod", "+x", script_path], check=True)
+            subprocess.run(["bash", script_path], check=True)
+            print("Shell script executed successfully.")
+
+            with open(deploy_subdomain_logs, "a") as myfile:
+                myfile.write(',{"step" : 7, "message" : "Access Project '+subdomain +' at this link  '+subdomain+'.techcamp.app "}')
+
+        except subprocess.CalledProcessError as e:
+            print(f"Error running the shell script: {e}")
+        except FileNotFoundError:
+            print(f"The shell script file '{script_path}' was not found.")
+
+        except:
+            with open(deploy_subdomain_logs, "a") as myfile:
+                myfile.write(',{"step" : 7, "message" : "Docker error for project '+subdomain +'."}')
+    else:
         with open(deploy_subdomain_logs, "a") as myfile:
-            myfile.write(',{"step" : 7, "message" : "Access Project '+subdomain +' at this link  '+subdomain+'.techcamp.app "}')
-
-    except subprocess.CalledProcessError as e:
-        print(f"Error running the shell script: {e}")
-    except FileNotFoundError:
-        print(f"The shell script file '{script_path}' was not found.")
-
-    except:
-        myfile.write(',{"step" : 7, "message" : "Docker error for project '+subdomain +'."}')
+                myfile.write(',{"step" : 7, "message" : "Docker error ,youre not running docker for project '+subdomain +'."}')
 
 
     #Milestone Task: Write and log in myfile as above

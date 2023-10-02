@@ -2,4 +2,4 @@ FLASK_APP=main.py
 FLASK_DEBUG=true
 
 
-but first install python-dotenv 
+#but first install python-dotenv 
