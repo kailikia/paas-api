@@ -147,7 +147,6 @@ def deploy_ssh_subprocess(github_url, subdomain):
             # Your additional Nginx configuration goes here
 
         }}
-
         """
     nginx_files = f"../nginx_files/{subdomain}"
     try:
