@@ -3,7 +3,7 @@ services:
     web:
         build: .
         env_file: .env
-        container_name: myapp
+        container_name: paas-api
         restart: always
         ports:
-            - 5001:80
+            - 4001:80
