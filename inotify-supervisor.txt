@@ -18,3 +18,5 @@ stdout_logfile=/var/log/supervisor/supervisor_stdout.log
 STEP 4
 sudo supervisorctl reread
 sudo supervisorctl update
+
+http://206.189.121.77:4001/
