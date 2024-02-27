@@ -1,0 +1,20 @@
+STEP 1
+sudo apt update
+sudo apt install inotify-tools supervisor
+
+STEP 2
+chmod +x /var/www/paas-api/monitor_changes.sh
+
+STEP 3
+nano /etc/supervisor/conf.d/monitor_changes.conf
+
+[program:monitor_changes]
+command=/usr/bin/inotifywait -m -e modify,create,delete /var/www/paas-api/deployed_apps | /var/www/paas-api/monitor_changes.sh
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/supervisor/supervisor_stderr.log
+stdout_logfile=/var/log/supervisor/supervisor_stdout.log
+
+STEP 4
+sudo supervisorctl reread
+sudo supervisorctl update
