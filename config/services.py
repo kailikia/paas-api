@@ -1,7 +1,7 @@
 import os
 from config.models import Subdomain, create_engine, Base, sessionmaker
 import subprocess, sys 
-from python_digitalocean import digitalocean
+from config.python_digitalocean.digitalocean import Domain,Manager
 import shutil
 import platform
 
@@ -16,12 +16,12 @@ session = session()
 
 #Service Functions
 def digital_ocean_create_subdomain(subdomain):
-    domain = digitalocean.Domain(token=DOTOKEN, name=deploy_domain)
+    domain = Domain(token=DOTOKEN, name=deploy_domain)
     records = domain.get_records()
     for r in records:
         print(r.type, r.data)
 
-    manager = digitalocean.Manager(token=DOTOKEN)
+    manager = Manager(token=DOTOKEN)
     my_projects = manager.get_all_projects()
     resources = my_projects[0].get_all_resources()
     return resources
