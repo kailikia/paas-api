@@ -93,19 +93,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         else:
             print(f"The .git folder in {folder_path} does not exist.")
 
-        # for dirs in os.walk(subdomain):
-        #         print("Stuff inside dirs: ", dirs)
-        #         for dir in dirs:
-        #             if dir == '.git':
-        #                 # os.rmdir(os.path.join(root))
-        #                 print("remove .git,", dirs)
-
-        # for files in os.walk(subdomain):
-        #     print("Stuff inside files: ", files)
-        #     for file in files:
-        #         if file == '.gitignore':
-        #                 # os.remove(os.path.join(file))
-        #                 print("removed .gitignore file", file)
 
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(',{"step" : 3, "message" : "Change permissions for '+subdomain +' successful."}')
