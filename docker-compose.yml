@@ -13,6 +13,6 @@ services:
         - /var/www/paas-api/deployed_nginx_files:/app/deployed_nginx_files
         - /var/www/paas-api/database:/app/database
 
-networks:
-  default:
-    driver: host
+# networks:
+#   default:
+#     driver: host
