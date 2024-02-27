@@ -15,4 +15,4 @@ services:
 
 networks:
   default:
-    driver: bridge
+    driver: host
