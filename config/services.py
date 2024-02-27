@@ -1,7 +1,7 @@
 import os
 from config.models import Subdomain, create_engine, Base, sessionmaker
 import subprocess, sys 
-from config.python_digitalocean import digitalocean
+from python_digitalocean import digitalocean
 import shutil
 import platform
 
