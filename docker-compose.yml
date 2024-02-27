@@ -7,3 +7,12 @@ services:
         restart: always
         ports:
             - 4001:80
+        volumes:
+        - ./deployed_apps:/app/deployed_apps
+        - ./deployed_apps_logs:/app/deployed_apps_logs
+        - ./deployed_nginx_files:/app/deployed_nginx_files
+        - ./database:/app/database
+
+networks:
+  default:
+    driver: bridge
