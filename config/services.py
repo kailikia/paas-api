@@ -6,7 +6,7 @@ import shutil
 from pydo import Client
 
 
-DOTOKEN=os.getenv("DOTOKEN")
+DOTOKEN=os.getenv("DO_TOKEN")
 deploy_domain = "techcamp.app"
 
 engine = create_engine("sqlite:///database/paas.db", connect_args={'check_same_thread': False})
