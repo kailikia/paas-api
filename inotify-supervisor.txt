@@ -3,7 +3,7 @@ sudo apt update
 sudo apt install inotify-tools supervisor
 
 STEP 2
-chmod +x /var/www/paas-api/monitor_changes.sh
+chmod +x /var/www/paas-api/monitor_deploy_html_changes.sh
 
 STEP 3
 nano /etc/supervisor/conf.d/monitor_changes.conf
