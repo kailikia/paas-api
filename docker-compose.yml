@@ -7,10 +7,10 @@ services:
         ports:
             - 4001:80
         volumes:
-        - /var/www/paas-api/deployed_apps:/app/deployed_apps
-        - /var/www/paas-api/deployed_apps_logs:/app/deployed_apps_logs
-        - /var/www/paas-api/deployed_nginx_files:/app/deployed_nginx_files
-        - /var/www/paas-api/database:/app/database
+        - /var/www/paas/deployed_apps:/app/deployed_apps
+        - /var/www/paas/deployed_apps_logs:/app/deployed_apps_logs
+        - /var/www/paas/deployed_nginx_files:/app/deployed_nginx_files
+        - /var/www/paas/database:/app/database
 
 # networks:
 #   default:
