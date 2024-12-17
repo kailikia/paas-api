@@ -37,7 +37,7 @@ def subdomain():
     else:
         return jsonify({"subdomain":"available"}),200
 
-@app.route('/deploy-html-app', methods=["POST", "GET"])
+@app.route('/deploy-app', methods=["POST", "GET"])
 def deploy_app(): 
     if  request.method == "POST":
         try:
