@@ -23,3 +23,13 @@ typing_extensions==4.7.0
 tzdata==2023.3
 urllib3==2.0.4
 Werkzeug==2.2.3
+pydo==0.2.0
+isodate==0.6.1
+msrest==0.7.1
+typing-extensions==3.7.4
+azure_core==1.30.0
+azure-identity==1.5.0
+typing-extensions==3.7.4
+msal==1.27.0
+cryptography==2.5
+PyJWT==2.8.0

@@ -5,15 +5,14 @@ from config.services import *
 import json
 from dotenv import load_dotenv, find_dotenv
 
-
 app = Flask(__name__)
 CORS(app)
 
 load_dotenv(find_dotenv())
 
-
 @app.route('/')
 def hello():
+    print("-----------", digital_ocean_list_domains())
     return jsonify({"name":"Software Deployment Paas"}),200
 
 @app.route('/sub-domains')

@@ -3,7 +3,7 @@ from config.models import Subdomain, create_engine, Base, sessionmaker
 import subprocess, sys 
 import digitalocean
 import shutil
-import platform
+from pydo import Client
 
 
 DOTOKEN="dop_v1_29416191975f00c404fba64d345c31e1dabff855b8cc3143c822b4a275a6e4fb"
@@ -14,7 +14,16 @@ Base.metadata.create_all(bind=engine)
 session = sessionmaker(bind=engine)
 session = session()
 
+# client = Client(token=os.environ.get("DO_TOKEN"))
+client = Client(DOTOKEN)
+
 #Service Functions
+def digital_ocean_list_domains():
+    resp = client.domains.list()
+    print("DO List-------",resp)
+    return resp
+   
+     
 def digital_ocean_create_subdomain(subdomain):
     domain = digitalocean.Domain(token=DOTOKEN, name=deploy_domain)
     records = domain.get_records()
