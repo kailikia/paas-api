@@ -4,5 +4,5 @@
 # Example: echo "Changes detected!"
 
 # Log the changes to a file
-echo "Changes detected at $(date)" >> /var/www/monitor_logfile.log
+echo "Changes detected at $(date)" >> /var/www/paas/monitor_logfile.log
 # echo "Changes detected at $(date)" >> /var/www/monitorneeew_logfile.log

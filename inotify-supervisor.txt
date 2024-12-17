@@ -3,13 +3,13 @@ sudo apt update
 sudo apt install inotify-tools supervisor
 
 STEP 2
-chmod +x /var/www/paas-api/monitor_deploy_html_changes.sh
+chmod +x /var/www/paas-api/monitor_deploy_changes.sh
 
 STEP 3
 nano /etc/supervisor/conf.d/monitor_changes.conf
 
 [program:monitor_changes]
-command=/usr/bin/inotifywait -m -e modify,create,delete /var/www/paas-api/deployed_apps | /var/www/paas-api/monitor_deploy_html_changes.sh
+command=/usr/bin/inotifywait -m -e modify,create,delete /var/www/paas/deployed_apps | /var/www/paas-api/monitor_deploy_changes.sh
 autostart=true
 autorestart=true
 stderr_logfile=/var/log/supervisor/supervisor_stderr.log
