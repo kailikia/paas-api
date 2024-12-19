@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify 
 from flask_cors import CORS
 import concurrent.futures
+from config.models import DeployedApplication
 from config.services import *
 import json
 from dotenv import load_dotenv, find_dotenv
@@ -26,6 +27,19 @@ def sub_domain():
     #From DO
 
     return jsonify(result)
+
+
+# query from DB sub domain, github url, status
+@app.route('/db-data')
+def db_data():
+
+    data = session.query(DeployedApplication).with_entities(DeployedApplication.id,Subdomain.name, DeployedApplication.github_url, DeployedApplication.port).join(Subdomain).all()
+    res = [{"id":s.id, "name" : s.name, "github_url" :s.github_url, "port":s.port } for s in data]
+
+    print(res)
+
+    return jsonify(res)
+
 
 @app.route('/sub-domain-availability', methods=["POST"])
 def subdomain(): 
