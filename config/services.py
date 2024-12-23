@@ -62,7 +62,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             myfile.write('[')
 
     #STEP 1: Change location to deployed apps directory in subdomain folder
-    if session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).first() != None:
+    if session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).first() == None:
         #Delete existing subdomain project 
         # os.system('rmdir /S /Q "{}"'.format(subdomain))
 
