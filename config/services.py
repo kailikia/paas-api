@@ -144,6 +144,19 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(']')
 
+    files = os.listdir('../deployed_apps_logs')
+    # Count the number of files (excluding directories
+
+    #STEP 5: Add deployed apps
+    file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
+    port = 5001 + file_count
+
+    subdomain = session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).one()
+    print("Subdomain---------------", subdomain)
+    session.add(add_deployed_apps(subdomain.id,github_url,port))
+    session.commit()
+
+    
     os.chdir('..')
 
     return True
