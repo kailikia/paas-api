@@ -17,6 +17,15 @@ session = session()
 # client = Client(token=os.environ.get("DO_TOKEN"))
 client = Client(DOTOKEN)
 
+def get_subdomain_logs(subdomain):
+     try:
+          os.chdir(os.getcwd()+'//deployed_apps')
+          deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
+          print("Subdomain Logs----------------", deploy_subdomain_logs)
+          return deploy_subdomain_logs
+     except Exception as e:
+          return {"Error" : str(e)}
+
 #Service Functions
 def digital_ocean_list_domains():
     resp = client.domains.list()
