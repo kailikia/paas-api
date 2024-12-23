@@ -52,7 +52,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     git_url_for_subdomain= f"git clone --depth 1 {github_url} {clone_path} "
     deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
 
-    print("----------------", deploy_subdomain_logs)
+    print("Subdomain Logs----------------", deploy_subdomain_logs)
 
     #Delete existing log contents
     open(deploy_subdomain_logs, 'w+').close()
@@ -64,7 +64,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     #STEP 1: Change location to deployed apps directory in subdomain folder
     if os.path.isdir(subdomain):
         #Delete existing subdomain project 
-        print("-----------", subdomain, os.getcwd())
         # os.system('rmdir /S /Q "{}"'.format(subdomain))
 
         def remove_contents(directory):
@@ -76,6 +75,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         session.commit()
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write('{"step" : 1, "message" : "Subdomain Domain Created for ' + subdomain+'"}')
+
+        print("Step 1: Location changed to subdomain folder and domain created--------------", subdomain, os.getcwd())
     else:  
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write('{"step" : 1, "message" : "Subdomain Domain Re-Created for '+ subdomain +'"}')
@@ -85,6 +86,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         #Edit txt to : Project cloned successfully 
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(',{"step" : 2, "message" : "Project '+subdomain +' cloned successfully"}')
+        print("Step 2: Git Cloned Successfull-----------------")
     else:
         myfile.write(',{"step" : 2, "message" : "Error cloning project '+subdomain +'."}')
 
@@ -109,6 +111,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(',{"step" : 3, "message" : "Change permissions for '+subdomain +' successful."}')
+
+        print("Step 3: Permission built for subdomain folder-----------------")
     except :
         myfile.write(',{"step" : 3, "message" : "Error changing permission for '+subdomain +' ."}')
 
@@ -147,7 +151,10 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     files = os.listdir('../deployed_apps_logs')
     # Count the number of files (excluding directories
 
+    print("Step 4: NGINX Server File Created Successfully-----------------")
+
     #STEP 5: Add deployed apps
+
     file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
     port = 5001 + file_count
 
@@ -155,6 +162,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     print("Subdomain---------------", subdomain)
     session.add(add_deployed_apps(subdomain.id,github_url,port))
     session.commit()
+
+    print("Step 2: Deployed Apps Added to Database Successfully-----------------")
 
     
     os.chdir('..')
