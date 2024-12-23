@@ -1,5 +1,5 @@
 import os
-from config.models import Subdomain, create_engine, Base, sessionmaker
+from config.models import DeployedApplication, Subdomain, create_engine, Base, sessionmaker
 import subprocess, sys 
 import digitalocean
 import shutil
@@ -38,6 +38,10 @@ def digital_ocean_create_subdomain(subdomain):
 def add_subdomain(name,user):
       add_domain = Subdomain(name, user)
       return add_domain
+
+def add_deployed_apps(subdomain_id,github_url,port):
+      add_app = DeployedApplication(subdomain_id, github_url, port)
+      return add_app
 
 def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     error_in_step = 0
@@ -250,6 +254,12 @@ def deploy_python_by_ssh_subprocess(github_url, subdomain, user):
     # Count the number of files (excluding directories)
     file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
     port = 5001 + file_count
+
+    subdomain_param = subdomain.strip().lower()
+    subdomain = session.query(Subdomain).filter(Subdomain.name==subdomain_param).all()
+
+    session.add(add_deployed_apps(subdomain.id,github_url,port))
+    session.commit()
 
     # Define the Nginx configuration content with variables
     # nginx_config = f"""

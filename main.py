@@ -34,6 +34,7 @@ def sub_domain():
 def db_data():
 
     data = session.query(DeployedApplication).with_entities(DeployedApplication.id,Subdomain.name, DeployedApplication.github_url, DeployedApplication.port).join(Subdomain).all()
+    
     res = [{"id":s.id, "name" : s.name, "github_url" :s.github_url, "port":s.port } for s in data]
 
     print(res)
