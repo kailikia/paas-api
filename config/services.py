@@ -62,7 +62,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             myfile.write('[')
 
     #STEP 1: Change location to deployed apps directory in subdomain folder
-    if os.path.isdir(subdomain):
+    if session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).first() != None:
         #Delete existing subdomain project 
         # os.system('rmdir /S /Q "{}"'.format(subdomain))
 
@@ -158,12 +158,12 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
     port = 5001 + file_count
 
-    subdomain = session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).one()
+    subdomain = session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).first()
     print("Subdomain---------------", subdomain)
     session.add(add_deployed_apps(subdomain.id,github_url,port))
     session.commit()
 
-    print("Step 2: Deployed Apps Added to Database Successfully-----------------")
+    print("Step 5: Deployed Apps Added to Database Successfully-----------------")
 
     
     os.chdir('..')
