@@ -11,7 +11,7 @@ STEP 3
 nano /etc/supervisor/conf.d/monitor_paas_changes.conf
 
 [program:monitor_paas_changes]
-command=/usr/bin/inotifywait -m -e modify,create,delete /var/www/paas/deployed_apps | /var/www/paas-api/monitor_deploy_changes.sh
+command=/bin/bash -c "/usr/bin/inotifywait -m -e modify,create,delete /var/www/paas/deployed_apps | /bin/bash /var/www/monitor_changes.sh"
 autostart=true
 autorestart=true
 stderr_logfile=/var/log/supervisor/paas_supervisor_stderr.log
@@ -20,3 +20,10 @@ stdout_logfile=/var/log/supervisor/paas_supervisor_stdout.log
 STEP 4
 sudo supervisorctl reread
 sudo supervisorctl update
+
+
+#!/bin/bash
+
+# Monitor the directory for changes and process events
+while read event; do echo "Event detected: $event"
+done

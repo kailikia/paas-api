@@ -1,7 +1,7 @@
 /deployed_apps/*/app/.git/
 /deployed_apps/*/app/.gitignore
-database/*
-/database
+database/paas.db
+/database/paas.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
