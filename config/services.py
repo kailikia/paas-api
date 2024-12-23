@@ -190,7 +190,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
        #Close Log file and RETURN BACK TO ROUTE
     with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(']')
-            myfile.close()
+            # myfile.close()
 
     os.chdir('..')
 
