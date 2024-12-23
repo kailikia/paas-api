@@ -66,10 +66,10 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         #Delete existing subdomain project 
         # os.system('rmdir /S /Q "{}"'.format(subdomain))
 
-        def remove_contents(directory):
-            shutil.rmtree(directory)
+        # def remove_contents(directory):
+        #     shutil.rmtree(directory)
             
-        remove_contents(subdomain)
+        # remove_contents(subdomain)
         #2. Save subdomain in DB
         session.add(add_subdomain(subdomain,user))
         session.commit()
