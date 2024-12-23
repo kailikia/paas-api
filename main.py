@@ -28,7 +28,7 @@ def sub_domain():
 
     return jsonify(result)
 
-@app.route("/subdomain-logs/{subdomain}")
+@app.route("/subdomain-logs/<subdomain>")
 def subdomain_logs(subdomain):
     return get_subdomain_logs(subdomain)
 
