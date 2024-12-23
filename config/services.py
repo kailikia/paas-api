@@ -257,6 +257,8 @@ def deploy_python_by_ssh_subprocess(github_url, subdomain, user):
 
     subdomain = session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).one()
 
+    print("Subdomain---------------", subdomain)
+
     session.add(add_deployed_apps(subdomain.id,github_url,port))
     session.commit()
 
