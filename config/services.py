@@ -20,38 +20,23 @@ client = Client(DOTOKEN)
 def get_subdomain_logs(subdomain):
     try:
         cur_path = os.path.join("/deployed_apps")
+        os.chdir(cur_path)
 
         if os.path.exists(cur_path):
 
-            if os.getcwd() == cur_path:
+            deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
+            print("Subdomain Logs 1----------------", deploy_subdomain_logs)
 
-                deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
-                print("Subdomain Logs 1----------------", deploy_subdomain_logs)
-
-                #Check if the file exists
-                if os.path.exists(deploy_subdomain_logs):
-                    # Open and read the file content
-                    with open(deploy_subdomain_logs, 'r') as file:
-                        file_content = file.read()
-                        return json.loads(file_content)  # Assuming the file contains JSON data
-                else:
-                    return {"Error": "Log file does not exist."}
-                return deploy_subdomain_logs
+            #Check if the file exists
+            if os.path.exists(deploy_subdomain_logs):
+                # Open and read the file content
+                with open(deploy_subdomain_logs, 'r') as file:
+                    file_content = file.read()
+                    return json.loads(file_content)  # Assuming the file contains JSON data
             else:
-                os.chdir(cur_path)
-
-                deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
-                print("Subdomain Logs 2----------------", deploy_subdomain_logs)
-
-                #Check if the file exists
-                if os.path.exists(deploy_subdomain_logs):
-                    # Open and read the file content
-                    with open(deploy_subdomain_logs, 'r') as file:
-                        file_content = file.read()
-                        return json.loads(file_content)  # Assuming the file contains JSON data
-                else:
-                    return {"Error": "Log file does not exist."}
-
+                return {"Error": "Log file does not exist."}
+            return deploy_subdomain_logs
+            
         else:
             return {"Error": "Deployed app path doesn't exist." + cur_path }
     except Exception as e:
