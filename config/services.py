@@ -36,7 +36,7 @@ def get_subdomain_logs(subdomain):
                 return {"Error": "Log file does not exist."}
             return deploy_subdomain_logs
         else:
-            return {"Error": "Deployed app path doesn't exist. {cur_path} "}
+            return {"Error": "Deployed app path doesn't exist." + cur_path }
     except Exception as e:
         return {"Error" : str(e)}
 
