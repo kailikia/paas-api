@@ -18,22 +18,27 @@ session = session()
 client = Client(DOTOKEN)
 
 def get_subdomain_logs(subdomain):
-     try:
-        os.chdir('/deployed_apps')
-        deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
-        print("Subdomain Logs----------------", deploy_subdomain_logs)
+    try:
+        cur_path = os.path.join(os.getcwd(), 'deployed_apps')
+        if os.path.exists(cur_path):
+            os.chdir(cur_path)
 
-        #Check if the file exists
-        if os.path.exists(deploy_subdomain_logs):
-            # Open and read the file content
-            with open(deploy_subdomain_logs, 'r') as file:
-                file_content = file.read()
-                return json.loads(file_content)  # Assuming the file contains JSON data
+            deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
+            print("Subdomain Logs----------------", deploy_subdomain_logs)
+
+            #Check if the file exists
+            if os.path.exists(deploy_subdomain_logs):
+                # Open and read the file content
+                with open(deploy_subdomain_logs, 'r') as file:
+                    file_content = file.read()
+                    return json.loads(file_content)  # Assuming the file contains JSON data
+            else:
+                return {"Error": "Log file does not exist."}
+            return deploy_subdomain_logs
         else:
-            return {"Error": "Log file does not exist."}
-        return deploy_subdomain_logs
-     except Exception as e:
-          return {"Error" : str(e)}
+            return {"Error": "Deployed app doesn't exist. "}
+    except Exception as e:
+        return {"Error" : str(e)}
 
 #Service Functions
 def digital_ocean_list_domains():
