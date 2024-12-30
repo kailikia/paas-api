@@ -20,15 +20,14 @@ client = Client(DOTOKEN)
 def get_subdomain_logs(subdomain):
     try:
 
-        base_dir = os.path.dirname(os.path.abspath(__file__))  # Directory where the script is located
-        cur_path = os.path.join(base_dir,"deployed_apps")
+        cur_path = "/app/deployed_apps"
 
         os.chdir(cur_path)
 
         if os.path.exists(cur_path):
 
             deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
-            print("Subdomain Logs 1----------------", deploy_subdomain_logs)
+            print("Subdomain Logs----------------", deploy_subdomain_logs)
 
             #Check if the file exists
             if os.path.exists(deploy_subdomain_logs):
