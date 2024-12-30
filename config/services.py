@@ -19,7 +19,7 @@ client = Client(DOTOKEN)
 
 def get_subdomain_logs(subdomain):
     try:
-        cur_path = os.path.join(os.getcwd(), 'deployed_apps')
+        cur_path = os.path.join("/deployed_apps")
 
         if os.path.exists(cur_path):
 
