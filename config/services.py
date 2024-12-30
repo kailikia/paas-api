@@ -19,7 +19,7 @@ client = Client(DOTOKEN)
 
 def get_subdomain_logs(subdomain):
      try:
-        os.chdir(os.getcwd() ,'/deployed_apps')
+        os.chdir('/deployed_apps')
         deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
         print("Subdomain Logs----------------", deploy_subdomain_logs)
 
