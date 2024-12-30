@@ -21,7 +21,7 @@ def get_subdomain_logs(subdomain):
     try:
         cur_path = os.path.join(os.getcwd(), 'deployed_apps')
         if os.path.exists(cur_path):
-            os.chdir(cur_path)
+            # os.chdir(cur_path)
 
             deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
             print("Subdomain Logs----------------", deploy_subdomain_logs)
