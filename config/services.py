@@ -73,7 +73,13 @@ def add_deployed_apps(subdomain_id,github_url,port):
 def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     error_in_step = 0
     #In windows RUN POWERSHELL AS ADMIN and run command "Set-ExecutionPolicy RemoteSigned"
-    os.chdir(os.getcwd()+'/deployed_apps')
+
+    cur_path = "/app/deployed_apps"
+
+    os.chdir(cur_path)
+
+    # if os.path.exists(cur_path):
+    # os.chdir(os.getcwd()+'/deployed_apps')
     clone_path = os.path.join(subdomain)
 
     git_url_for_subdomain= f"git clone --depth 1 {github_url} {clone_path} "
