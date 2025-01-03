@@ -155,7 +155,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         server {{   listen 80;
             server_name {subdomain}.techcamp.app;
 
-            root /deployed_apps/{subdomain};  
+            root /var/www/paas/deployed_apps/{subdomain};  
 
             index index.html;
 
