@@ -2,12 +2,14 @@ import os
 from config.models import DeployedApplication, Subdomain, create_engine, Base, sessionmaker
 import subprocess, sys 
 import digitalocean
-import shutil, json
+import shutil, json, requests
 from pydo import Client
 
 
 DOTOKEN=os.getenv("DO_TOKEN")
 deploy_domain = "techcamp.app"
+ip_address = "134.209.24.19"
+url = f"https://api.digitalocean.com/v2/domains/{deploy_domain}/records"
 
 engine = create_engine("sqlite:///database/paas.db", connect_args={'check_same_thread': False})
 Base.metadata.create_all(bind=engine)
@@ -16,6 +18,25 @@ session = session()
 
 # client = Client(token=os.environ.get("DO_TOKEN"))
 client = Client(DOTOKEN)
+
+# Set up headers for authorization
+headers = {
+    "Authorization": f"Bearer {DOTOKEN}",
+    "Content-Type": "application/json"
+}
+
+def digital_ocean_create_subdomain(subdomain):
+    data = {
+    "type": "A",  # A record type
+    "name": subdomain,
+    "data": ip_address,
+    "ttl": 600  # Time to live in seconds
+    }
+    response = requests.post(url, json=data, headers=headers)
+    if response.status_code == 201:
+        print("Subdomain created successfully!---------------------", response.json())
+    else:
+        print("Failed to create subdomain.------------------------", response.status_code, response.json())
 
 def get_subdomain_logs(subdomain):
     try:
@@ -51,16 +72,17 @@ def digital_ocean_list_domains():
     return resp
    
      
-def digital_ocean_create_subdomain(subdomain):
-    domain = digitalocean.Domain(token=DOTOKEN, name=deploy_domain)
-    records = domain.get_records()
-    for r in records:
-        print(r.type, r.data)
+# def digital_ocean_create_subdomain(subdomain):
+#     domain = digitalocean.Domain(token=DOTOKEN, name=subdomain)
+#     domain.create()
+#     records = domain.get_records()
+#     for r in records:
+#         print(r.type, r.data)
 
-    manager = digitalocean.Manager(token=DOTOKEN)
-    my_projects = manager.get_all_projects()
-    resources = my_projects[0].get_all_resources()
-    return resources
+#     manager = digitalocean.Manager(token=DOTOKEN)
+#     my_projects = manager.get_all_projects()
+#     resources = my_projects[0].get_all_resources()
+#     return resources
 
 def add_subdomain(name,user):
       add_domain = Subdomain(name, user)
@@ -200,12 +222,21 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(',{"step" : 5, "message" : "Error adding deployed apps to database for '+subdomain +'.techcamp.app"}')
 
-    print("Step 5: Deployed Apps Added to Database Successfully-----------------")
+    print("Step 5: Deployed Apps Added to Database Successfully-----------------")        
 
-       #Close Log file and RETURN BACK TO ROUTE
+    #STEP 6: Add Subdomain to DNS DigitalOcean
+    digital_ocean_create_subdomain(subdomain)
+
+    try:
+        with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(',{"step" : 6, "message" : "A record added for '+subdomain +'.techcamp.app to DigitalOcean DNS"}')
+    except OSError as e:
+        with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(',{"step" : 6, "message" : "Error adding subdomain for '+subdomain +'.techcamp.app to DigitalOcean DNS"}')
+
+    #Close Log file and RETURN BACK TO ROUTE
     with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(']')
-            # myfile.close()
 
     os.chdir('..')
 
