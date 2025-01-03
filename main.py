@@ -49,9 +49,9 @@ def db_data():
 @app.route('/sub-domain-availability', methods=["POST"])
 def subdomain(): 
     subdomain_param = request.json["subdomain"].strip().lower()
-    subdomain = session.query(Subdomain).filter(Subdomain.name==subdomain_param).count()
+    subdomain_db = session.query(Subdomain).filter(Subdomain.name==subdomain_param).first()
 
-    if subdomain != 0 or len(subdomain_param) == 0:
+    if subdomain_db or len(subdomain_param) == 0:
         return jsonify({"subdomain":"not-available"})
     else:
         return jsonify({"subdomain":"available"}),200
