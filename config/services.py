@@ -104,16 +104,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     # os.chdir(os.getcwd()+'/deployed_apps')
     clone_path = os.path.join(subdomain)
 
-    #Copy Dockerfile to deployed apps
-
-    try:
-        # Execute the command
-        subprocess.run(cp_command, check=True, shell=True)
-        print(f"Docker File copied successfully to {subdomain}.-------------------")
-    except subprocess.CalledProcessError as e:
-        print(f"Error executing command: {e}----------------------------------------")
-    
-
     git_url_for_subdomain= f"git clone --depth 1 {github_url} {clone_path} "
     deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
 
@@ -136,6 +126,16 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             
         # remove_contents(subdomain)
         #2. Save subdomain in DB
+
+            #Copy Dockerfile to deployed apps
+
+        try:
+            # Execute the command
+            subprocess.run(cp_command, check=True, shell=True)
+            print(f"Docker File copied successfully to {subdomain}.-------------------")
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing command: {e}----------------------------------------")
+    
         session.add(add_subdomain(subdomain,user))
         session.commit()
         with open(deploy_subdomain_logs, "a") as myfile:
