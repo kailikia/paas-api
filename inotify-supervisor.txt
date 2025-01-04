@@ -11,7 +11,7 @@ STEP 3
 nano /etc/supervisor/conf.d/monitor_paas_changes.conf
 
 [program:monitor_paas_changes]
-command=/bin/bash -c "/usr/bin/inotifywait -m -e modify,create,delete /var/www/paas/deployed_apps | /bin/bash /var/www/monitor_changes.sh"
+command=/bin/bash -c "/usr/bin/inotifywait -m -e modify,create,delete /var/www/paas/success_report | /bin/bash /var/www/monitor_changes.sh"
 autostart=true
 autorestart=true
 stderr_logfile=/var/log/supervisor/paas_supervisor_stderr.log
