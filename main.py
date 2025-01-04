@@ -41,7 +41,7 @@ def db_data():
     
     res = [{"id":s.id, "name" : s.name, "github_url" :s.github_url, "port":s.port } for s in data]
 
-    print("DB Data------------------------",res)
+    # print("DB Data------------------------",res)
 
     return jsonify(res)
 
