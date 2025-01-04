@@ -246,9 +246,9 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         os.chdir(folder_path)
 
         # Create the success report file
-        file_path = os.path.join(folder_path, f"{subdomain}.sh")
+        file_path = os.path.join(folder_path, subdomain+".sh")
         with open(file_path, "w") as file:
-            file.write(f"run {subdomain} app on port {file_count}")
+            file.write("run " +subdomain+" app on port " +file_count+"")
 
         print(f"Success report created: {file_path}")
 
