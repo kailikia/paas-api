@@ -96,11 +96,23 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
     cur_path = "/app/deployed_apps"
 
+    cp_command = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
+
     os.chdir(cur_path)
 
     # if os.path.exists(cur_path):
     # os.chdir(os.getcwd()+'/deployed_apps')
     clone_path = os.path.join(subdomain)
+
+    #Copy Dockerfile to deployed apps
+
+    try:
+        # Execute the command
+        subprocess.run(cp_command, check=True, shell=True)
+        print(f"Docker File copied successfully to {subdomain}.-------------------")
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing command: {e}----------------------------------------")
+    
 
     git_url_for_subdomain= f"git clone --depth 1 {github_url} {clone_path} "
     deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
@@ -171,18 +183,35 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
 
     #STEP 4 : Create an nginx string with variables {port} {subdomain} concatenated and add to an ngix-config file.
+    
+    file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
+    port = 5001 + file_count
+
     nginx_config = f"""
-        server {{   listen 80;
+        server {{   
             server_name {subdomain}.techcamp.app;
 
-            root /var/www/paas/deployed_apps/{subdomain};  
-
-            index index.html;
-
             location / {{
-                try_files $uri $uri/ =404;
+                  proxy_pass http://134.209.24.19:{port};
             }}
+
+           listen 443 ssl; # managed by Certbot
+            ssl_certificate /etc/letsencrypt/live/{subdomain}.techcamp.app/fullchain.pem; # managed by Certbot
+            ssl_certificate_key /etc/letsencrypt/live/{subdomain}.techcamp.app/privkey.pem; # managed by Certbot
+            include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+            ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
         }}
+        server {{
+            if ($host = {subdomain}.techcamp.app) {{
+                return 301 https://$host$request_uri;
+            }} # managed by Certbot
+
+            server_name {subdomain}.techcamp.app;
+            listen 80;
+            return 404; # managed by Certbot
+        }}
+
     """
     deployed_nginx_subdomain_file = f"../deployed_nginx_files/{subdomain}.techcamp.app"
 
@@ -204,9 +233,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     print("Step 4: NGINX Server File Created Successfully-----------------")
 
     #STEP 5: Add deployed apps
-
-    file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
-    port = 5001 + file_count
 
     subdomain_created = session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).first()
     print("Subdomain---------------", subdomain_created)
@@ -236,23 +262,27 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(']')
 
+    # os.chdir('..')
 
     try:
+    # Ensure the folder exists before setting permissions
+        # folder_path = "../success-report"
+        # os.makedirs(folder_path, exist_ok=True)
+        # os.chmod(folder_path, 0o755)
+        # os.chdir(folder_path)
+
         # Create the success report file
         success_file = os.path.join("../success-report", subdomain +".sh")
         with open(success_file, "a") as file:
-            file.write("Run " +subdomain+" app on port 50" + str(port) )
+            file.write("Run " +subdomain+" app on port 50" +str(file_count)+"")
 
         print(f"Success report created: {success_file}")
 
     except OSError as e:
         print(f"Error creating success report for {subdomain}: {e}")
 
-
-    os.chdir('..')
-
+        
     return True
-
 
 # def deploy_python_by_ssh_subprocess(github_url, subdomain, user):
 #     error_in_step = 0
