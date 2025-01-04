@@ -183,7 +183,9 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     except subprocess.CalledProcessError as e:
         print(f"Error executing command: {e}----------------------------------------")
     
-    
+    files = os.listdir('../deployed_apps_logs')
+    # Count the number of files (excluding directories
+
     file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
     port = 5001 + file_count
 
@@ -225,10 +227,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     except OSError as e:
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(',{"step" : 4, "message" : "Error adding Nginx server block for '+subdomain +'.techcamp.app"}')
-
-
-    files = os.listdir('../deployed_apps_logs')
-    # Count the number of files (excluding directories
 
     print("Step 4: NGINX Server File Created Successfully-----------------")
 
