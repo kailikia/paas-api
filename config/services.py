@@ -46,7 +46,6 @@ def get_subdomain_logs(subdomain):
         os.chdir(cur_path)
 
         if os.path.exists(cur_path):
-
             deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
             print("Subdomain Logs----------------", deploy_subdomain_logs)
 
@@ -59,7 +58,6 @@ def get_subdomain_logs(subdomain):
             else:
                 return {"Error": "Log file does not exist."}
             return deploy_subdomain_logs
-            
         else:
             return {"Error": "Deployed app path doesn't exist." + cur_path }
     except Exception as e:
@@ -239,6 +237,19 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             myfile.write(']')
 
     os.chdir('..')
+
+    try:
+        # Set permissions (e.g., 755)
+        os.chmod(folder_path, 0o755)
+        os.makedirs("/success-report", exist_ok=True)
+        file_path = os.path.join("/success-report", f"{subdomain}.sh")
+        with open(file_path, "w") as file:
+            file.write(f"run {subdomain} app on port {file_count}")
+        with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(',{"step" : 7, "message" : "Success report created for '+subdomain +'.techcamp.app"}')
+    except OSError as e:
+        with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(',{"step" : 6, "message" : "Error creating success report subdomain for '+subdomain +'.techcamp.app"}')
 
     return True
 

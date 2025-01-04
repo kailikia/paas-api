@@ -11,6 +11,7 @@ services:
         - /var/www/paas/deployed_apps_logs:/app/deployed_apps_logs
         - /var/www/paas/deployed_nginx_files:/app/deployed_nginx_files
         - /var/www/paas/database:/app/database
+        - /var/www/paas/success-report:/app/success-report
 
 # networks:
 #   default:

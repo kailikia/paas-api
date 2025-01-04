@@ -67,9 +67,6 @@ def deploy_app():
             # Start SSH or Powershell Script to deploy app
             deploy_html_by_ssh_subprocess(github_url, subdomain, user) 
 
-            # Call DO API to create subdomain and attach to subdomain and add A record
-            do_response = digital_ocean_create_subdomain(subdomain) 
-
             return jsonify({"message":"sub domain added and app deployed succcessfully","status": 1}),200
         except Exception as e:
             return jsonify({"message":e, "status": 1})
