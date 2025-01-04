@@ -245,12 +245,9 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         file_path = os.path.join("/success-report", f"{subdomain}.sh")
         with open(file_path, "w") as file:
             file.write(f"run {subdomain} app on port {file_count}")
-        with open(deploy_subdomain_logs, "a") as myfile:
-            myfile.write(',{"step" : 7, "message" : "Success report created for '+subdomain +'.techcamp.app"}')
     except OSError as e:
-        with open(deploy_subdomain_logs, "a") as myfile:
-            myfile.write(',{"step" : 6, "message" : "Error creating success report subdomain for '+subdomain +'.techcamp.app"}')
-
+        print(f"Error creating success report for {subdomain}")
+        
     return True
 
 # def deploy_python_by_ssh_subprocess(github_url, subdomain, user):
