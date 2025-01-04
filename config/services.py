@@ -172,7 +172,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
     #STEP 4 : Create an nginx string with variables {port} {subdomain} concatenated and add to an ngix-config file.
     nginx_config = f"""
-        server {{   listen 80;
+        server {{   
             server_name {subdomain}.techcamp.app;
 
             root /var/www/paas/deployed_apps/{subdomain};  
