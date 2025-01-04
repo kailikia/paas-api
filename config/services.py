@@ -126,16 +126,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             
         # remove_contents(subdomain)
         #2. Save subdomain in DB
-
-            #Copy Dockerfile to deployed apps
-
-        try:
-            # Execute the command
-            subprocess.run(cp_command, check=True, shell=True)
-            print(f"Docker File copied successfully to {subdomain}.-------------------")
-        except subprocess.CalledProcessError as e:
-            print(f"Error executing command: {e}----------------------------------------")
-    
         session.add(add_subdomain(subdomain,user))
         session.commit()
         with open(deploy_subdomain_logs, "a") as myfile:
@@ -183,6 +173,16 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
 
     #STEP 4 : Create an nginx string with variables {port} {subdomain} concatenated and add to an ngix-config file.
+
+    
+    #Copy Dockerfile to deployed apps
+    try:
+        # Execute the command
+        subprocess.run(cp_command, check=True, shell=True)
+        print(f"Docker File copied successfully to {subdomain}.-------------------")
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing command: {e}----------------------------------------")
+    
     
     file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
     port = 5001 + file_count
