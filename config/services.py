@@ -236,17 +236,17 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(']')
 
-    os.chdir('..')
+    # os.chdir('..')
 
     try:
     # Ensure the folder exists before setting permissions
-        folder_path = "/success-report"
-        os.makedirs(folder_path, exist_ok=True)
-        os.chmod(folder_path, 0o755)
-        os.chdir(folder_path)
+        # folder_path = "../success-report"
+        # os.makedirs(folder_path, exist_ok=True)
+        # os.chmod(folder_path, 0o755)
+        # os.chdir(folder_path)
 
         # Create the success report file
-        success_file = os.path.join("/success-report", subdomain +".sh")
+        success_file = os.path.join("../success-report", subdomain +".sh")
         with open(success_file, "a") as file:
             file.write("run " +subdomain+" app on port " +str(file_count)+"")
 
