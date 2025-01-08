@@ -275,7 +275,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         success_file = os.path.join("../success-report", subdomain +".sh")
         with open(success_file, "a") as file:
             file.write(f"""
-                       docker build -t {subdomain} {dockerfile_dir} && docker run -p {port}:80 --name {subdomain}-app {subdomain} 
+                       docker build -t {subdomain} {dockerfile_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
                        """)
 
         print(f"Success report created: {success_file}")
