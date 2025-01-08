@@ -194,27 +194,37 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             server_name {subdomain}.techcamp.app;
 
             location / {{
-                  proxy_pass http://134.209.24.19:{port};
+                  proxy_pass http://{ip_address}:{port};
             }}
-
-           listen 443 ssl; # managed by Certbot
-            ssl_certificate /etc/letsencrypt/live/{subdomain}.techcamp.app/fullchain.pem; # managed by Certbot
-            ssl_certificate_key /etc/letsencrypt/live/{subdomain}.techcamp.app/privkey.pem; # managed by Certbot
-            include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-            ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-
         }}
-        server {{
-            if ($host = {subdomain}.techcamp.app) {{
-                return 301 https://$host$request_uri;
-            }} # managed by Certbot
-
-            server_name {subdomain}.techcamp.app;
-            listen 80;
-            return 404; # managed by Certbot
-        }}
-
     """
+
+    # nginx_config = f"""
+    #     server {{   
+    #         server_name {subdomain}.techcamp.app;
+
+    #         location / {{
+    #               proxy_pass http://134.209.24.19:{port};
+    #         }}
+
+    #        listen 443 ssl; # managed by Certbot
+    #         ssl_certificate /etc/letsencrypt/live/{subdomain}.techcamp.app/fullchain.pem; # managed by Certbot
+    #         ssl_certificate_key /etc/letsencrypt/live/{subdomain}.techcamp.app/privkey.pem; # managed by Certbot
+    #         include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    #         ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+    #     }}
+    #     server {{
+    #         if ($host = {subdomain}.techcamp.app) {{
+    #             return 301 https://$host$request_uri;
+    #         }} # managed by Certbot
+
+    #         server_name {subdomain}.techcamp.app;
+    #         listen 80;
+    #         return 404; # managed by Certbot
+    #     }}
+
+    # """
     deployed_nginx_subdomain_file = f"../deployed_nginx_files/{subdomain}.techcamp.app"
 
     try:
