@@ -196,6 +196,10 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             location / {{
                   proxy_pass http://{ip_address}:{port};
             }}
+
+            location /.well-known/acme-challenge/ {{
+                root /var/www/nginx-acmes;
+            }}
         }}
     """
 
