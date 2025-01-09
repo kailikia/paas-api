@@ -198,7 +198,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             }}
 
             location /.well-known/acme-challenge/ {{
-                root /var/www/nginx-acmes;
+                root /etc/letsencrypt/live;
             }}
         }}
     """
