@@ -1,3 +1,4 @@
+import datetime
 import os
 from config.models import DeployedApplication, Subdomain, create_engine, Base, sessionmaker
 import subprocess, sys 
@@ -235,32 +236,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         }}
     """
 
-    # nginx_config = f"""
-    #     server {{   
-    #         server_name {subdomain}.techcamp.app;
-
-    #         location / {{
-    #               proxy_pass http://134.209.24.19:{port};
-    #         }}
-
-    #        listen 443 ssl; # managed by Certbot
-    #         ssl_certificate /etc/letsencrypt/live/{subdomain}.techcamp.app/fullchain.pem; # managed by Certbot
-    #         ssl_certificate_key /etc/letsencrypt/live/{subdomain}.techcamp.app/privkey.pem; # managed by Certbot
-    #         include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    #         ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-
-    #     }}
-    #     server {{
-    #         if ($host = {subdomain}.techcamp.app) {{
-    #             return 301 https://$host$request_uri;
-    #         }} # managed by Certbot
-
-    #         server_name {subdomain}.techcamp.app;
-    #         listen 80;
-    #         return 404; # managed by Certbot
-    #     }}
-
-    # """
     deployed_nginx_subdomain_file = f"../deployed_nginx_files/{subdomain}.techcamp.app"
 
     try:
@@ -331,6 +306,28 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
         
     return True
+
+def destroy_application(subdomain):
+    try:
+    # Ensure the folder exists before setting permissions
+        # folder_path = "../success-report"
+        # os.makedirs(folder_path, exist_ok=True)
+        # os.chmod(folder_path, 0o755)
+        # os.chdir(folder_path)
+
+        destroy_file = os.path.join("../destroy-report", subdomain +".sh")
+        with open(destroy_file, "a") as file:
+            file.write(f"""
+                       destroy {subdomain} initiated at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+                       """)
+
+        print(f"Destroy report created: {destroy_file}")
+
+    except OSError as e:
+        print(f"Error creating destroy file for {subdomain}: {e}")
+        
+    return True
+
 
 # def deploy_python_by_ssh_subprocess(github_url, subdomain, user):
 #     error_in_step = 0

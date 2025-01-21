@@ -2,7 +2,7 @@
 
 read event
 
-echo "Event detected: $event"
+echo "Deploy App Event detected: $event"
 
 sleep 5
 

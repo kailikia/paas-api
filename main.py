@@ -84,6 +84,24 @@ def deploy_progress():
             return json.loads(res)
         except:
             return '_'
+        
+@app.route('/destroy-app/<subdomain>', methods=['POST'])
+def destroy_app(subdomain): 
+    try:
+        # Start the script or function to destroy the application
+        destroy_application(subdomain)
+        
+        return jsonify({
+            "message": f"Destroy app and sub-domain process started for: {subdomain}",
+            "status": 1
+        }), 200
+    except Exception as e:
+        # Log the exception (optional) and return an error response
+        error_message = str(e)
+        return jsonify({
+            "message": f"An error occurred: {error_message}",
+            "status": 0
+        }), 500
     
 if __name__=='__main__':
     app.run()
