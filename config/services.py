@@ -217,8 +217,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             server_name {subdomain}.techcamp.app;
 
             # SSL Certificates
-            ssl_certificate /etc/nginx/ssl/{subdomain}.techcamp.app/fullchain.pem;
-            ssl_certificate_key /etc/nginx/ssl/{subdomain}.techcamp.app/privkey.pem;
+            #ssl_certificate /etc/nginx/ssl/{subdomain}.techcamp.app/fullchain.pem;
+            #ssl_certificate_key /etc/nginx/ssl/{subdomain}.techcamp.app/privkey.pem;
 
             # Strong SSL Settings
             ssl_protocols TLSv1.2 TLSv1.3;
