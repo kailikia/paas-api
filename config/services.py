@@ -309,13 +309,10 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
 def destroy_application(subdomain):
     try:
-    # Ensure the folder exists before setting permissions
-        # folder_path = "../success-report"
-        # os.makedirs(folder_path, exist_ok=True)
-        # os.chmod(folder_path, 0o755)
-        # os.chdir(folder_path)
+        cur_path = "/app/destroy-report"
+        os.chdir(cur_path)
 
-        destroy_file = os.path.join("../destroy-report", subdomain +".sh")
+        destroy_file = os.path.join(os.curdir, subdomain +".sh")
         with open(destroy_file, "a") as file:
             file.write(f"""
                        destroy {subdomain} initiated at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
@@ -325,7 +322,7 @@ def destroy_application(subdomain):
 
     except OSError as e:
         print(f"Error creating destroy file for {subdomain}: {e}")
-        
+
     return True
 
 
