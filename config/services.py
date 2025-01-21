@@ -197,10 +197,48 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
                   proxy_pass http://{ip_address}:{port};
             }}
 
+
+            # ACME Challenge for SSL
             location /.well-known/acme-challenge/ {{
-                root /etc/letsencrypt/live;
+                root /root/.acme.sh/{subdomain}.techcamp.app_ecc/;  # Correct path to challenge files
+                default_type "text/plain";
+                allow all;
+            }}
+
+            # Redirect all traffic to HTTPS
+            location / {{
+                return 301 https://$host$request_uri;
             }}
         }}
+
+        # HTTPS Block
+        server {{
+            listen 443 ssl http2;
+            server_name {subdomain}.techcamp.app;
+
+            # SSL Certificates
+            ssl_certificate /etc/nginx/ssl/{subdomain}.techcamp.app/fullchain.pem;
+            ssl_certificate_key /etc/nginx/ssl/{subdomain}.techcamp.app/privkey.pem;
+
+            # Strong SSL Settings
+            ssl_protocols TLSv1.2 TLSv1.3;
+            ssl_prefer_server_ciphers on;
+            ssl_ciphers HIGH:!aNULL:!MD5;
+
+            # Reverse Proxy to Container
+            location / {{
+                proxy_pass http://{ip_address}:{port}; # Container running on port {port}
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }}
+
+            # Logging (optional)
+            access_log /var/www/paas/logs/{subdomain}_nginx_access.log;
+            error_log /var/www/paas/logs/{subdomain}_nginx_error.log;
+        }}
+
     """
 
     # nginx_config = f"""
