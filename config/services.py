@@ -193,11 +193,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         server {{   
             server_name {subdomain}.techcamp.app;
 
-            location / {{
-                  proxy_pass http://{ip_address}:{port};
-            }}
-
-
             # ACME Challenge for SSL
             location /.well-known/acme-challenge/ {{
                 root /root/.acme.sh/{subdomain}.techcamp.app_ecc/;  # Correct path to challenge files
@@ -238,7 +233,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             access_log /var/www/paas/logs/{subdomain}_nginx_access.log;
             error_log /var/www/paas/logs/{subdomain}_nginx_error.log;
         }}
-
     """
 
     # nginx_config = f"""
