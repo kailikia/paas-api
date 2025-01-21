@@ -14,7 +14,7 @@ sudo chmod +x /var/www/paas/logs/$subdomain
 
 #STEP 2: Issue and Install ACME Certificates for the subdomain
 sudo ~/.acme.sh/acme.sh --issue -d $subdomain.techcamp.app --standalone &> /var/www/paas/logs/$subdomain/issue-acme-cert.log
-sudo ~/.acme.sh/acme.sh --install-cert --domain $subdomain.techcamp.app --ecc --key-file /root/.acme.sh/$subdomain.techcamp.app_ecc/$subdomain.techcamp.app.key --fullchain-file /root/.acme.sh/$subdomain.techcamp.app_ecc/fullchain.cer --cert-file &> /var/www/paas/logs/$subdomain/install-acme-cert.log
+sudo ~/.acme.sh/acme.sh --install-cert --domain $subdomain.techcamp.app --ecc --key-file /root/.acme.sh/$subdomain.techcamp.app_ecc/$subdomain.techcamp.app.key --fullchain-file /root/.acme.sh/$subdomain.techcamp.app_ecc/fullchain.cer &> /var/www/paas/logs/$subdomain/install-acme-cert.log
 
 #STEP 3: Copy the sh file from success report with docker steps, into the deployed apps folder
 sudo cp /var/www/paas/success-report/"$subdomain.sh" /var/www/paas/deployed_apps/"$subdomain"/
@@ -37,8 +37,9 @@ sudo chmod +x /etc/nginx/sites-enabled/"$subdomain.techcamp.app"
 echo "Copying /etc/nginx/sites-available/$subdomain.techcamp.app to /etc/nginx/sites-enabled/"
 
 #STEP 7: Stop and Start Nginx Service or Kill nginx process and start NGINX
-#sudo systemctl reload nginx
-#echo "Nginx reloaded to apply changes"
+# sudo kill $(sudo lsof -t -c nginx)
+# sudo systemctl start nginx
+# echo "Nginx processes killed and NGINX started"
 
 # Output event detection information
 echo "Event ended"
