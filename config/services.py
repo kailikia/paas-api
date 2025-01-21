@@ -195,7 +195,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
             # ACME Challenge for SSL
             location /.well-known/acme-challenge/ {{
-                root /root/.acme.sh/{subdomain}.techcamp.app_ecc/;  # Correct path to challenge files
+                root /etc/nginx/ssl/{subdomain}.techcamp.app/{subdomain}.techcamp.app_ecc/
                 default_type "text/plain";
                 allow all;
             }}
@@ -212,8 +212,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             server_name {subdomain}.techcamp.app;
 
             # SSL Certificates
-            #ssl_certificate /etc/nginx/ssl/{subdomain}.techcamp.app/fullchain.pem;
-            #ssl_certificate_key /etc/nginx/ssl/{subdomain}.techcamp.app/privkey.pem;
+            ssl_certificate  /root/.acme.sh/{subdomain}.techcamp.app_ecc/fullchain.cer;
+            ssl_certificate_key /root/.acme.sh/{subdomain}.techcamp.app_ecc/monet.techcamp.app.key;
 
             # Strong SSL Settings
             ssl_protocols TLSv1.2 TLSv1.3;
