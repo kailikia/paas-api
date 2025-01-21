@@ -85,7 +85,7 @@ def deploy_progress():
         except:
             return '_'
         
-@app.route('/destroy-app/<subdomain>', methods=['POST'])
+@app.route('/destroy-app/<subdomain>')
 def destroy_app(subdomain): 
     try:
         # Start the script or function to destroy the application
