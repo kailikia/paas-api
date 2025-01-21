@@ -1,3 +1,7 @@
+#!/bin/bash
+
+read event
+
 echo "Event detected: $event"
 
 sleep 5
@@ -7,9 +11,8 @@ subdomain=$(echo "$event" | awk '{print $3}' | sed 's/.sh$//')
 echo "Extracted subdomain: $subdomain"
 
 #STEP 2: Issue and Install ACME Certificates for the subdomain
-sudo acme.sh "--issue -d $subdomain.techcamp.app --standalone" &> /var/www/paas/logs/$subdomain-issue-acme-cert.log
-sudo acme.sh "--install-cert --domain $subdomain.techcamp.app --ecc --key-file /root/.acme.sh/$subdomain.techcamp.app_ecc/$subdomain.techcamp.app.key 
---fullchain-file /root/.acme.sh/$subdomain.techcamp.app_ecc/fullchain.cer --cert-file" &> /var/www/paas/logs/$subdomain-inst-acme-cert.log
+sudo ~/.acme.sh/acme.sh --issue -d $subdomain.techcamp.app --standalone &> /var/www/paas/logs/$subdomain-issue-acme-cert.log
+sudo ~/.acme.sh/acme.sh --install-cert --domain $subdomain.techcamp.app --ecc --key-file /root/.acme.sh/$subdomain.techcamp.app_ecc/$subdomain.techcamp.app.key --fullchain-file /root/.acme.sh/$subdomain.techcamp.app_ecc/fullchain.cer --cert-file &> /var/www/paas/logs/$subdomain-inst-acme-cert.log
 
 #STEP 3: Copy the sh file from success report with docker steps, into the deployed apps folder
 sudo cp /var/www/paas/success-report/"$subdomain.sh" /var/www/paas/deployed_apps/"$subdomain"/
