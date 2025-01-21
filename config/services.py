@@ -195,7 +195,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
             # ACME Challenge for SSL
             location /.well-known/acme-challenge/ {{
-                root /etc/nginx/ssl/{subdomain}.techcamp.app/{subdomain}.techcamp.app_ecc/
+                root /var/www/paas/deployed_apps/{subdomain};
                 default_type "text/plain";
                 allow all;
             }}
