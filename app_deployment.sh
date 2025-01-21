@@ -6,13 +6,15 @@ echo "Event detected: $event"
 
 sleep 5
 
-#STEP 1: Extract subdomain from the event (assuming it's the 3rd field in the event)
+#STEP 1: Extract subdomain from the event (assuming it's the 3rd field in the event) and create logs directory
 subdomain=$(echo "$event" | awk '{print $3}' | sed 's/.sh$//')
 echo "Extracted subdomain: $subdomain"
+sudo mkdir -p /var/www/paas/logs/$subdomain
+sudo chmod +x /var/www/paas/logs/$subdomain
 
 #STEP 2: Issue and Install ACME Certificates for the subdomain
-sudo ~/.acme.sh/acme.sh --issue -d $subdomain.techcamp.app --standalone &> /var/www/paas/logs/$subdomain-issue-acme-cert.log
-sudo ~/.acme.sh/acme.sh --install-cert --domain $subdomain.techcamp.app --ecc --key-file /root/.acme.sh/$subdomain.techcamp.app_ecc/$subdomain.techcamp.app.key --fullchain-file /root/.acme.sh/$subdomain.techcamp.app_ecc/fullchain.cer --cert-file &> /var/www/paas/logs/$subdomain-inst-acme-cert.log
+sudo ~/.acme.sh/acme.sh --issue -d $subdomain.techcamp.app --standalone &> /var/www/paas/logs/$subdomain/issue-acme-cert.log
+sudo ~/.acme.sh/acme.sh --install-cert --domain $subdomain.techcamp.app --ecc --key-file /root/.acme.sh/$subdomain.techcamp.app_ecc/$subdomain.techcamp.app.key --fullchain-file /root/.acme.sh/$subdomain.techcamp.app_ecc/fullchain.cer --cert-file &> /var/www/paas/logs/$subdomain/install-acme-cert.log
 
 #STEP 3: Copy the sh file from success report with docker steps, into the deployed apps folder
 sudo cp /var/www/paas/success-report/"$subdomain.sh" /var/www/paas/deployed_apps/"$subdomain"/
@@ -21,7 +23,7 @@ echo "Copying /var/www/paas/success-report/$subdomain.sh to /var/www/paas/deploy
 
 #STEP 4: Build Docker image and deploy container
 echo "Now deploying Docker"
-sudo sh -x "/var/www/paas/deployed_apps/$subdomain/$subdomain.sh" &> /var/www/paas/logs/$subdomain-docker.log
+sudo sh -x "/var/www/paas/deployed_apps/$subdomain/$subdomain.sh" &> /var/www/paas/logs/$subdomain/docker.log
 echo "Docker deployment completed successfully."
 
 #STEP 5: Copy Nginx config files to sites-available directory
