@@ -230,8 +230,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             }}
 
             # Logging (optional)
-            access_log /var/www/paas/logs/{subdomain}_nginx_access.log;
-            error_log /var/www/paas/logs/{subdomain}_nginx_error.log;
+            access_log /var/www/paas/logs/{subdomain}/nginx_access.log;
+            error_log /var/www/paas/logs/{subdomain}/nginx_error.log;
         }}
     """
 
