@@ -25,6 +25,12 @@ delete_if_exists() {
     fi
 }
 
+# Allow the owner (root) full access to the directories
+sudo chmod -R u+rwx /root/.acme.sh
+sudo chmod -R u+rwx /etc/nginx/sites-available
+sudo chmod -R u+rwx /etc/nginx/sites-enabled
+sudo chmod -R u+rwx /var/www/paas
+
 # Call delete_if_exists for each file or folder
 delete_if_exists "/root/.acme.sh/${subdomain}.${APP_NAME}_ecc"
 delete_if_exists "/etc/nginx/sites-available/${subdomain}.${APP_NAME}"
