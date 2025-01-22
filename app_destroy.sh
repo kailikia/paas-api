@@ -15,10 +15,10 @@ APP_NAME="techcamp.app"
 
 # Step 3: Delete files and folders
 echo "Step 3: Deleting files and folders..."
-sudo sudo rm -rf /root/.acme.sh/${subdomain}.${APP_NAME}_ecc
+sudo rm -rf /root/.acme.sh/${subdomain}.${APP_NAME}_ecc
 echo "Deleted: /root/.acme.sh/${subdomain}.${APP_NAME}_ecc"
 
-sudo sudo rm -f /etc/nginx/sites-available/${subdomain}.${APP_NAME}
+sudo rm -f /etc/nginx/sites-available/${subdomain}.${APP_NAME}
 echo "Deleted: /etc/nginx/sites-available/${subdomain}.${APP_NAME}"
 
 sudo rm -f /etc/nginx/sites-enabled/${subdomain}.${APP_NAME}
