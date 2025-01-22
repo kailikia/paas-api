@@ -1,0 +1,22 @@
+STEP 1
+sudo apt update
+sudo apt install inotify-tools supervisor
+
+STEP 2
+sudo chmod +x /var/www/paas-api/app_destroy.sh
+sudo chown -R root:root /var/www/paas/deployed_apps
+sudo chown -R root:root /var/www/paas-api/app_destroy.sh
+
+STEP 3
+nano /etc/supervisor/conf.d/monitor_destroy_changes.conf
+
+[program:monitor_destroy_changes]
+command=/bin/bash -c "/usr/bin/inotifywait -m -e create /var/www/paas/destroy-report | /bin/bash /var/www/paas-api/app_destroy.sh"
+autostart=true
+autorestart=true
+stderr_logfile=/var/www/paas/logs/destroy_supervisor_stderr.log
+stdout_logfile=/var/www/paas/logs/destroy_supervisor_stdout.log
+
+STEP 4
+sudo supervisorctl reread
+sudo supervisorctl update
