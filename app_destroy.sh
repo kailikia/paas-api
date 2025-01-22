@@ -30,8 +30,8 @@ echo "Deleted: /var/www/paas/deployed_apps/${subdomain}"
 sudo rm -f /var/www/paas/deployed_nginx_files/${subdomain}.${APP_NAME}
 echo "Deleted: /var/www/paas/deployed_nginx_files/${subdomain}.${APP_NAME}"
 
-sudo rm -rf /var/www/logs/${subdomain}
-echo "Deleted: /var/www/logs/${subdomain}"
+sudo rm -rf /var/www/paas/logs/${subdomain}
+echo "Deleted: /var/www/paas/logs/${subdomain}"
 
 sudo rm -f /var/www/paas/success-report/${subdomain}.sh
 echo "Deleted: /var/www/paas/success-report/${subdomain}.sh"
@@ -53,7 +53,7 @@ echo "Docker container stopped and removed: ${subdomain}"
 
 # Step 6: Delete Docker image
 echo "Step 6: Deleting Docker image..."
-docker sudo rmi ${subdomain}
+docker rmi ${subdomain}
 echo "Docker image deleted: ${subdomain}"
 
 # Final Step: Completion message
