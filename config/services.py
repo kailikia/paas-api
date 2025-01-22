@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import os
 from config.models import DeployedApplication, Subdomain, create_engine, Base, sessionmaker
 import subprocess, sys 

@@ -51,10 +51,12 @@ docker stop ${subdomain}-app
 docker sudo rm ${subdomain}
 echo "Docker container stopped and removed: ${subdomain}"
 
-# Step 6: Delete Docker image
+# Step 6: Delete Docker image and prune
 echo "Step 6: Deleting Docker image..."
 docker rmi ${subdomain}
 echo "Docker image deleted: ${subdomain}"
+
+sudo docker system prune -a -f
 
 # Final Step: Completion message
 echo "Application removal completed successfully for subdomain: ${subdomain}."
