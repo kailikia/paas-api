@@ -64,25 +64,13 @@ def get_subdomain_logs(subdomain):
     except Exception as e:
         return {"Error" : str(e)}
 
-#Service Functions
+# Service Functions
+
 def digital_ocean_list_domains():
     resp = client.domains.list()
     print("DO List-------",resp)
     return resp
    
-     
-# def digital_ocean_create_subdomain(subdomain):
-#     domain = digitalocean.Domain(token=DOTOKEN, name=subdomain)
-#     domain.create()
-#     records = domain.get_records()
-#     for r in records:
-#         print(r.type, r.data)
-
-#     manager = digitalocean.Manager(token=DOTOKEN)
-#     my_projects = manager.get_all_projects()
-#     resources = my_projects[0].get_all_resources()
-#     return resources
-
 def add_subdomain(name,user):
       add_domain = Subdomain(name, user)
       return add_domain
@@ -90,6 +78,32 @@ def add_subdomain(name,user):
 def add_deployed_apps(subdomain_id,github_url,port):
       add_app = DeployedApplication(subdomain_id, github_url, port)
       return add_app
+
+
+def delete_subdomain_and_apps_by_name(subdomain_name):
+    try:
+        # Query the subdomain by name
+        subdomain = session.query(Subdomain).filter(Subdomain.name == subdomain_name).first()
+        if not subdomain:
+            print(f"Subdomain '{subdomain_name}' not found!")
+            return
+        # Delete associated deployed applications
+        session.query(DeployedApplication).filter(DeployedApplication.subdomain_id == subdomain.id).delete()
+        # Delete the subdomain
+        session.delete(subdomain)
+        # Commit the transaction
+        session.commit()
+        print(f"Subdomain '{subdomain_name}' and associated applications deleted successfully!")
+    except Exception as e:
+        session.rollback()
+        print(f"An error occurred: {e}")
+    finally:
+        session.close()
+
+    return True
+
+
+# Deploy and Server Functions 
 
 def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     error_in_step = 0
@@ -311,6 +325,8 @@ def destroy_application(subdomain):
     try:
         cur_path = "/app/destroy-report"
         os.chdir(cur_path)
+
+        delete_subdomain_and_apps_by_name(subdomain)
 
         destroy_file = os.path.join(os.curdir, subdomain +".sh")
         with open(destroy_file, "w") as file:

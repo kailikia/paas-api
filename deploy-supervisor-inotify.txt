@@ -17,7 +17,6 @@ autorestart=true
 stderr_logfile=/var/www/paas/logs/deploy_supervisor_stderr.log
 stdout_logfile=/var/www/paas/logs/deploy_supervisor_stdout.log
 
-
 STEP 4
 sudo supervisorctl reread
 sudo supervisorctl update
