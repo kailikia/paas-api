@@ -313,7 +313,7 @@ def destroy_application(subdomain):
         os.chdir(cur_path)
 
         destroy_file = os.path.join(os.curdir, subdomain +".sh")
-        with open(destroy_file, "a") as file:
+        with open(destroy_file, "w") as file:
             file.write(f"""
                        destroy {subdomain} initiated at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
                        """)
