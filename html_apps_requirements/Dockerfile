@@ -2,4 +2,5 @@ FROM ubuntu:22.04
 RUN apt-get update
 RUN apt-get install -y nginx
 COPY . /var/www/html/
-CMD service nginx start && tail -F /var/log/nginx/error.log
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
