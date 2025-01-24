@@ -58,5 +58,9 @@ docker rmi ${subdomain} 2>/dev/null
 echo "Docker image deleted: ${subdomain}"
 docker system prune -a -f
 
+# Reload NGINX and Supervisor
+sudo systemctl reload nginx
+sudo supervisorctl restart all
+
 # Final Step: Completion message
 echo "Application removal completed successfully for subdomain: ${subdomain}."
