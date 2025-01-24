@@ -9,5 +9,7 @@ docker-compose up --build -d
 # find -mindepth 1 -exec rm -rf {} +
 # sudo lsof -t -c nginx
 # sudo systemctl start nginx
+# sudo pkill -9 nginx
+
 
 # docker logs -f paas-api
