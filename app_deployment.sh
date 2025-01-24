@@ -41,7 +41,8 @@ echo "Copying /etc/nginx/sites-available/$subdomain.techcamp.app to /etc/nginx/s
 #STEP 7: Stop and Start Nginx Service or Kill nginx process and start NGINX
 # sudo kill $(sudo lsof -t -c nginx)
 sudo systemctl reload nginx
-# echo "Nginx processes killed and NGINX started"
+sudo supervisorctl restart all
+# echo "Reload NGINX and Supervisor"
 
 # Output event detection information
 echo "Event ended"
