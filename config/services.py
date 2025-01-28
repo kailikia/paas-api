@@ -55,8 +55,11 @@ def get_docker_logs(subdomain):
             if os.path.exists(dock_logs):
                 # Open and read the file content
                 with open(dock_logs, 'r') as file:
-                    file_content = file.read()
-                    json.dump(parsed_logs, file_content, indent=4)
+                    for line in file:
+                        line = line.strip()  # Remove leading/trailing whitespace
+                        if line:  # Skip empty lines
+                            parsed_logs.append({"message": line})
+                            return json.dumps(parsed_logs, indent=4)
             else:
                 return {"Error": "Log file does not exist."}
             return parsed_logs
@@ -84,8 +87,11 @@ def get_nginx_logs(subdomain):
             if os.path.exists(nginx_logs):
                 # Open and read the file content
                 with open(nginx_logs, 'r') as file:
-                    file_content = file.read()
-                    json.dump(parsed_logs, file_content, indent=4)
+                    for line in file:
+                        line = line.strip()  # Remove leading/trailing whitespace
+                        if line:  # Skip empty lines
+                            parsed_logs.append({"message": line})
+                            return json.dumps(parsed_logs, indent=4)
             else:
                 return {"Error": "Log file {} does not exist."}
             return parsed_logs
@@ -112,8 +118,11 @@ def get_acme_logs(sub):
             if os.path.exists(acme_logs):
                 # Open and read the file content
                 with open(acme_logs, 'r') as file:
-                    file_content = file.read()
-                    json.dump(parsed_logs, file_content, indent=4)            
+                    for line in file:
+                        line = line.strip()  # Remove leading/trailing whitespace
+                        if line:  # Skip empty lines
+                            parsed_logs.append({"message": line})
+                            return json.dumps(parsed_logs, indent=4)            
             else:
                 return {"Error": f"Log file {acme_logs} does not exist."}
             return parsed_logs 
