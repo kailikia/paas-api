@@ -59,7 +59,7 @@ def get_docker_logs(subdomain):
                         line = line.strip()  # Remove leading/trailing whitespace
                         if line:  # Skip empty lines
                             parsed_logs.append({"message": line})
-                        return json.dumps(parsed_logs, indent=4)
+                return json.dumps(parsed_logs, indent=4)
             else:
                 return {"Error": "Log file does not exist."}
             return parsed_logs
@@ -91,7 +91,7 @@ def get_nginx_logs(subdomain):
                         line = line.strip()  # Remove leading/trailing whitespace
                         if line:  # Skip empty lines
                             parsed_logs.append({"message": line})
-                        return json.dumps(parsed_logs, indent=4)
+                return json.dumps(parsed_logs, indent=4)
             else:
                 return {"Error": "Log file {} does not exist."}
             return parsed_logs
@@ -122,7 +122,7 @@ def get_acme_logs(sub):
                         line = line.strip()  # Remove leading/trailing whitespace
                         if line:  # Skip empty lines
                             parsed_logs.append({"message": line})
-                        return json.dumps(parsed_logs, indent=4)            
+                return json.dumps(parsed_logs, indent=4)            
             else:
                 return {"Error": f"Log file {acme_logs} does not exist."}
             return parsed_logs 
