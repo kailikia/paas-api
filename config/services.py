@@ -63,7 +63,7 @@ def get_docker_logs(subdomain):
                 with open('parsed_logs.json', 'w') as json_file:
                     return json.dump(parsed_logs, json_file, indent=4)
 
-                return parsed_logs
+                return dock_logs
             else:
                 return {"Error": "Log file does not exist."}
         else:
@@ -96,9 +96,10 @@ def get_nginx_logs(subdomain):
                 # Optionally, save to a new JSON file
                 with open('parsed_logs.json', 'w') as json_file:
                     return json.dump(parsed_logs, json_file, indent=4)
+                
+                return nginx_logs
             else:
                 return {"Error": "Log file {} does not exist."}
-            
         else:
             return {"Error": "Deployed app path doesn't exist." + log_path }
 
@@ -126,12 +127,14 @@ def get_acme_logs(sub):
                         line = line.strip()  # Remove leading/trailing whitespace
                         if line:  # Skip empty lines
                             parsed_logs.append({"message": line})
-                # Optionally, save to a new JSON file
+                # Save to a new JSON file
                 with open('parsed_logs.json', 'w') as json_file:
-                    return json.dump(parsed_logs, json_file, indent=4)           
+                    return json.dump(parsed_logs, json_file, indent=4)   
+                
+                return acme_logs
+        
             else:
                 return {"Error": f"Log file {acme_logs} does not exist."}
-             
         else:
             return {"Error": "Deployed app path doesn't exist." + log_path }
 
