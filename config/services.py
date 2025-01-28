@@ -47,7 +47,6 @@ def get_docker_logs(subdomain):
         os.chdir(log_path)
         parsed_logs = []
 
-
         if os.path.exists(log_path):
             dock_logs = os.path.join(f"/{subdomain}/docker.log")
             print("Subdomain Docker Logs----------------", dock_logs)
@@ -78,24 +77,23 @@ def get_nginx_logs(subdomain):
         parsed_logs = []
 
         if os.path.exists(log_path):
-            acme_logs = os.path.join(f"/{subdomain}/nginx_access.log")
-            print("Nginx Logs----------------", acme_logs)
+            nginx_logs = os.path.join(f"/{subdomain}/nginx_access.log")
+            print("Nginx Logs----------------", nginx_logs)
 
             #Check if the file exists
-            if os.path.exists(acme_logs):
+            if os.path.exists(nginx_logs):
                 # Open and read the file content
-                with open(acme_logs, 'r') as file:
+                with open(nginx_logs, 'r') as file:
                     file_content = file.read()
                     json.dump(parsed_logs, file_content, indent=4)
             else:
-                return {"Error": "Log file does not exist."}
+                return {"Error": "Log file {} does not exist."}
             return parsed_logs
         else:
             return {"Error": "Deployed app path doesn't exist." + log_path }
 
     except Exception as e:
         return {"Error" : str(e)}
-
 
 
 def get_acme_logs(sub):
@@ -117,7 +115,7 @@ def get_acme_logs(sub):
                     file_content = file.read()
                     json.dump(parsed_logs, file_content, indent=4)            
             else:
-                return {"Error": "Log file does not exist."}
+                return {"Error": f"Log file {acme_logs} does not exist."}
             return parsed_logs 
         else:
             return {"Error": "Deployed app path doesn't exist." + log_path }
