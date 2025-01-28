@@ -48,7 +48,7 @@ def get_docker_logs(subdomain):
         parsed_logs = []
 
         if os.path.exists(log_path):
-            dock_logs = os.path.join(f"/{subdomain}/docker.log")
+            dock_logs = os.path.join(f"/app/subdomain_logs/{subdomain}/docker.log")
             print("Subdomain Docker Logs----------------", dock_logs)
 
             #Check if the file exists
@@ -77,7 +77,7 @@ def get_nginx_logs(subdomain):
         parsed_logs = []
 
         if os.path.exists(log_path):
-            nginx_logs = os.path.join(f"/{subdomain}/nginx_access.log")
+            nginx_logs = os.path.join(f"/app/subdomain_logs/{subdomain}/nginx_access.log")
             print("Nginx Logs----------------", nginx_logs)
 
             #Check if the file exists
@@ -105,7 +105,7 @@ def get_acme_logs(sub):
         parsed_logs = []
 
         if os.path.exists(log_path):
-            acme_logs = os.path.join(f"/{sub}/issue-acme-cert.log")
+            acme_logs = os.path.join(f"/app/subdomain_logs/{sub}/issue-acme-cert.log")
             print("Acme Logs----------------", acme_logs)
 
             #Check if the file exists
