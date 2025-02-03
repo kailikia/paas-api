@@ -15,7 +15,7 @@ load_dotenv(find_dotenv())
 
 @app.route('/')
 def hello():
-    print("-----------", digital_ocean_list_domains())
+    # print("-----------", digital_ocean_list_domains())
     return jsonify({"name":"Software Deployment Paas"}),200
 
 @app.route('/sub-domains')
