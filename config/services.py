@@ -488,7 +488,7 @@ def rebuild_application(subdomain):
         cur_path = "/app/rebuild-report"
         os.chdir(cur_path)
 
-        rebuild_file = os.path.join(os.curdir, subdomain +".sh")
+        rebuild_file = os.path.join(os.curdir, "re_"+subdomain +".sh")
         with open(rebuild_file, "w") as file:
             file.write(f"""
                        docker build -t {subdomain} {app_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
