@@ -13,7 +13,7 @@ services:
         - /var/www/paas/database:/app/database
         - /var/www/paas/success-report:/app/success-report
         - /var/www/paas/destroy-report:/app/destroy-report
-
+        - /var/www/paas/logs:/app/subdomain_logs
 # networks:
 #   default:
 #     driver: host

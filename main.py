@@ -32,6 +32,18 @@ def sub_domain():
 def subdomain_logs(subdomain):
     return get_subdomain_logs(subdomain)
 
+@app.route("/logs/acme/<subdomain>")
+def acme_logs(subdomain):
+    return get_acme_logs(subdomain)
+
+
+@app.route("/logs/nginx/<subdomain>")
+def nginx_logs(subdomain):
+    return get_nginx_logs(subdomain)
+
+@app.route("/logs/docker/<subdomain>")
+def docker_logs(subdomain):
+    return get_docker_logs(subdomain)
 
 # query from DB sub domain, github url, status
 @app.route('/db-data')

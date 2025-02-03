@@ -39,6 +39,100 @@ def digital_ocean_create_subdomain(subdomain):
     else:
         print("Failed to create subdomain.------------------------", response.status_code, response.json())
 
+
+def get_docker_logs(subdomain):
+    try:
+        log_path = "/app/subdomain_logs"
+
+        os.chdir(log_path)
+        parsed_logs = []
+
+        if os.path.exists(log_path):
+            dock_logs = os.path.join(f"/app/subdomain_logs/{subdomain}/docker.log")
+            print("Subdomain Docker Logs----------------", dock_logs)
+
+            #Check if the file exists
+            if os.path.exists(dock_logs):
+                # Open and read the file content
+                with open(dock_logs, 'r') as file:
+                    for line in file:
+                        line = line.strip()  # Remove leading/trailing whitespace
+                        if line:  # Skip empty lines
+                            parsed_logs.append({"message": line})
+                return json.dumps(parsed_logs, indent=4)
+            else:
+                return {"Error": "Log file does not exist."}
+            
+        else:
+            return {"Error": "Deployed app path doesn't exist." + log_path }
+
+
+    except Exception as e:
+        return {"Error" : str(e)}
+
+
+def get_nginx_logs(subdomain):
+
+    try:
+        log_path = "/app/subdomain_logs"
+
+        os.chdir(log_path)
+        parsed_logs = []
+
+        if os.path.exists(log_path):
+            nginx_logs = os.path.join(f"/app/subdomain_logs/{subdomain}/nginx_access.log")
+            print("Nginx Logs----------------", nginx_logs)
+
+            #Check if the file exists
+            if os.path.exists(nginx_logs):
+                # Open and read the file content
+                with open(nginx_logs, 'r') as file:
+                    for line in file:
+                        line = line.strip()  # Remove leading/trailing whitespace
+                        if line:  # Skip empty lines
+                            parsed_logs.append({"message": line})
+                return json.dumps(parsed_logs, indent=4)
+            else:
+                return {"Error": "Log file {} does not exist."}
+            
+        else:
+            return {"Error": "Deployed app path doesn't exist." + log_path }
+
+    except Exception as e:
+        return {"Error" : str(e)}
+
+
+def get_acme_logs(sub):
+
+    try:
+        log_path = "/app/subdomain_logs"
+
+        os.chdir(log_path)
+        parsed_logs = []
+
+        if os.path.exists(log_path):
+            acme_logs = os.path.join(f"/app/subdomain_logs/{sub}/issue-acme-cert.log")
+            print("Acme Logs----------------", acme_logs)
+
+            #Check if the file exists
+            if os.path.exists(acme_logs):
+                # Open and read the file content
+                with open(acme_logs, 'r') as file:
+                    for line in file:
+                        line = line.strip()  # Remove leading/trailing whitespace
+                        if line:  # Skip empty lines
+                            parsed_logs.append({"message": line})
+                return json.dumps(parsed_logs, indent=4)            
+            else:
+                return {"Error": f"Log file {acme_logs} does not exist."}
+             
+        else:
+            return {"Error": "Deployed app path doesn't exist." + log_path }
+
+    except Exception as e:
+        return {"Error" : str(e)}
+
+
 def get_subdomain_logs(subdomain):
     try:
 

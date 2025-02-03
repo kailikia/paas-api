@@ -9,5 +9,7 @@ sudo supervisorctl restart all
 # find -mindepth 1 -exec rm -rf {} +
 # sudo lsof -t -c nginx
 # sudo systemctl start nginx
+# sudo pkill nginx
+# sudo pkill inotifywait
 
 # docker logs -f paas-api
