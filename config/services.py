@@ -494,7 +494,7 @@ def rebuild_application(subdomain):
                        docker build -t {subdomain} {app_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
                        """)
 
-        print(f"Re-build report created: {rebuild_file}")
+        print(f"Re-build report file created: {rebuild_file}")
 
     except OSError as e:
         print(f"Error creating destroy file for {subdomain}: {e}")
