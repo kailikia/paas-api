@@ -282,8 +282,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
 
     #STEP 4 : Create an nginx string with variables {port} {subdomain} concatenated and add to an ngix-config file.
-
-    
     #Copy Dockerfile to deployed apps
     try:
         # Execute the command
@@ -360,7 +358,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     print("Step 4: NGINX Server File Created Successfully-----------------")
 
     #STEP 5: Add deployed apps
-
     subdomain_created = session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).first()
     print("Subdomain---------------", subdomain_created)
     session.add(add_deployed_apps(subdomain_created.id,github_url,port))
@@ -434,6 +431,75 @@ def destroy_application(subdomain):
         print(f"Error creating destroy file for {subdomain}: {e}")
 
     return True
+
+def rebuild_application(subdomain):
+    try:
+        # 1. Removing git folder
+        app_dir=f"/var/www/paas/deployed_apps/{subdomain}"
+        os.chdir(app_dir)
+
+        if os.path.exists(app_dir):
+            try:
+                # Using subprocess to remove the folder
+                subprocess.run(['rm', '-rf', app_dir], check=True)
+                print(f"Successfully removed {app_dir}")
+            except subprocess.CalledProcessError as e:
+                print(f"Error occurred while removing {app_dir}: {e}")
+        else:
+            print(f"Directory {app_dir} does not exist.")
+
+        # 2. Fetching the github url and port from DB
+        result = session.query(DeployedApplication.github_url, DeployedApplication.port).join(Subdomain).filter(Subdomain.name == subdomain.strip().lower()).first()
+        github_url, port = result[0]
+        print("Github URL and Port---------------------------",  github_url, port)
+
+        # 3. Cloning latest Github URL
+        cur_path = "/app/deployed_apps"
+        os.chdir(cur_path)
+        clone_path = os.path.join(subdomain)
+
+        git_url_for_subdomain= f"git clone --depth 1 {github_url} {clone_path} "
+
+        if subprocess.run(git_url_for_subdomain, shell=True).returncode == 0:
+            print(f"Re-deployment Successfully cloned {github_url} to {subdomain}---------------")
+        else:
+            print(f"Error cloning {github_url} to {subdomain}---------------")
+
+        # 4. Remove .git folder
+        try:
+            def change_permissions(file_path, mode):
+                os.chmod(file_path, mode)
+            mode = 0o777
+            git_folder_path = os.path.join(clone_path, '.git')
+
+            change_permissions(git_folder_path, mode)
+            
+            # os.chmod(git_folder_path, 0o777) 
+            
+            if os.path.exists(git_folder_path):
+                shutil.rmtree(git_folder_path)
+                print(f"The .git folder in {clone_path} has been removed.")
+            else:
+                print(f"The .git folder in {clone_path} does not exist.")
+        except Exception as e:
+            print("Redeploy App Error delete .git folder-------------", e)
+
+        # 5. Creating sh file to run the container
+        cur_path = "/app/rebuild-report"
+        os.chdir(cur_path)
+
+        rebuild_file = os.path.join(os.curdir, subdomain +".sh")
+        with open(rebuild_file, "w") as file:
+            file.write(f"""
+                       docker build -t {subdomain} {app_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
+                       """)
+
+        print(f"Re-build report created: {rebuild_file}")
+
+    except OSError as e:
+        print(f"Error creating destroy file for {subdomain}: {e}")
+
+    return True 
 
 
 # def deploy_python_by_ssh_subprocess(github_url, subdomain, user):

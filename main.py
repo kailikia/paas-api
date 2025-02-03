@@ -23,9 +23,7 @@ def sub_domain():
     #From DB
     subdomains = session.query(Subdomain).all()
     result = [{"name" : s.name, "id" : s.id, "user" :s.user} for s in subdomains]
-
     #From DO
-
     return jsonify(result)
 
 @app.route("/subdomain-logs/<subdomain>")
@@ -94,11 +92,26 @@ def deploy_progress():
             with open(deploy_subdomain_logs, "r") as myfile:
                 res = myfile.read()
             return json.loads(res)
+        
         except Exception as e:
             print("Deploy Progress Error for "+subdomain+"------------------------",e)
             # Log the exception (optional) and return an error response
             error_message = str(e)
             return jsonify({"message": f"An error occurred: {error_message}"}), 500
+        
+        
+@app.route('/rebuild-app/<subdomain>', methods=["POST", "GET"])
+def re_deploy_app(subdomain): 
+    # if  request.method == "POST":
+        try:
+            # subdomain = request.json["subdomain"].strip().lower()
+            # Start SSH or Powershell Script to Re-deploy app
+            rebuild_application(subdomain) 
+            return jsonify({"message":"app re-deployed succcessfully","status": 1}),200
+        
+        except Exception as e:
+            return jsonify({"message":e, "status": 1})
+        
         
 @app.route('/destroy-app/<subdomain>', methods=["POST", "GET"])
 def destroy_app(subdomain): 
