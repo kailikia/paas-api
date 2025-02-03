@@ -37,7 +37,7 @@ delete_if_exists "/etc/nginx/sites-available/${subdomain}.${APP_NAME}"
 delete_if_exists "/etc/nginx/sites-enabled/${subdomain}.${APP_NAME}"
 delete_if_exists "/var/www/paas/deployed_apps/${subdomain}"
 delete_if_exists "/var/www/paas/deployed_nginx_files/${subdomain}.${APP_NAME}"
-delete_if_exists "/var/www/paas/logs/${subdomain}"
+#delete_if_exists "/var/www/paas/logs/${subdomain}"
 delete_if_exists "/var/www/paas/success-report/${subdomain}.sh"
 delete_if_exists "/var/www/paas/deployed_app_logs/${subdomain}.json"
 

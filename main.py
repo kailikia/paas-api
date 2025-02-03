@@ -82,8 +82,11 @@ def deploy_progress():
             with open(deploy_subdomain_logs, "r") as myfile:
                 res = myfile.read()
             return json.loads(res)
-        except:
-            return '_'
+        except Exception as e:
+            print("Deploy Progress Error for "+subdomain+"------------------------",e)
+            # Log the exception (optional) and return an error response
+            error_message = str(e)
+            return jsonify({"message": f"An error occurred: {error_message}"}), 500
         
 @app.route('/destroy-app/<subdomain>', methods=["POST", "GET"])
 def destroy_app(subdomain): 
