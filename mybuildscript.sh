@@ -2,6 +2,8 @@ git pull
 docker-compose down
 sudo docker system prune -a -f
 docker-compose up --build -d
+sudo supervisorctl reread
+sudo supervisorctl update
 sudo supervisorctl restart all
 # acme.sh --config-home /root/.acme.sh --issue -d vedi.techcamp.app --standalone --cert-home /etc/nginx/ssl/vedi.techcamp.app
 # tail -f /var/log/supervisor/paas_supervisor_stdout.log
