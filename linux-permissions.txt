@@ -12,12 +12,23 @@ sudo apt update
 sudo apt install inotify-tools supervisor
 *acme, *docker, *nginx
 
+FOLDER CREATIONS
+mkdir -p /var/www/paas
+mkdir -p /var/www/paas/success-report
+mkdir -p /var/www/paas/destroy-report
+mkdir -p /var/www/paas/rebuild-report
+mkdir -p /var/www/paas/logs
+mkdir -p /var/www/paas/database
+mkdir -p /var/www/paas/deployed_apps
+mkdir -p /var/www/paas/deployed_apps_logs
+mkdir -p /var/www/paas/deployed_nginx_files
+
+
 PERMISSIONS FOR ACTION SCRIPTS :
 sudo chown -R root:root /var/www/paas/deployed_apps
 
 sudo chmod +x /var/www/paas-api/action-scripts/app_destroy.sh
 sudo chown -R root:root /var/www/paas-api/action-scripts/app_destroy.sh
-
 
 sudo chmod +x /var/www/paas-api/action-scripts/app_deployment.sh
 sudo chown -R root:root /var/www/paas-api/action-scripts/app_deployment.sh
