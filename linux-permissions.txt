@@ -26,6 +26,10 @@ mkdir -p /var/www/paas/deployed_nginx_files
 
 PERMISSIONS FOR ACTION SCRIPTS :
 sudo chown -R root:root /var/www/paas/deployed_apps
+sudo chmod +x /var/www/paas/logs
+
+sudo chown -R root:root /etc/supervisor/conf.d
+sudo chmod +x /etc/supervisor/conf.d
 
 sudo chmod +x /var/www/paas-api/action-scripts/app_destroy.sh
 sudo chown -R root:root /var/www/paas-api/action-scripts/app_destroy.sh
@@ -37,14 +41,14 @@ sudo chmod +x /var/www/paas-api/action-scripts/app_rebuild.sh
 sudo chown -R root:root /var/www/paas-api/action-scripts/app_rebuild.sh
 
 PERMISSION FOR WATCH FILES :
+sudo chown -R root:root /var/www/paas-api/watch-files/watch_destroy.sh
 sudo chmod +x /var/www/paas-api/watch-files/watch_destroy.sh
-sudo chown -R root:root /var/www/paas-api/action-scripts/app_destroy.sh
 
+sudo chown -R root:root /var/www/paas-api/watch-files/watch_deploy.sh
 sudo chmod +x /var/www/paas-api/watch-files/watch_deploy.sh
-sudo chown -R root:root /var/www/paas-api/action-scripts/app_deployment.sh
 
+sudo chown -R root:root /var/www/paas-api/watch-files/watch_rebuild.sh
 sudo chmod +x /var/www/paas-api/watch-files/watch_rebuild.sh
-sudo chown -R root:root /var/www/paas-api/action-scripts/app_rebuild.sh
 
 
 RELOADS :

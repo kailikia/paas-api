@@ -2,7 +2,7 @@
 
 # Step 0: Initialize
 read event
-echo "Deploy App Event detected: $event"
+echo "Destroy App Event detected: $event"
 
 # Step 1: Extract subdomain from the event
 subdomain=$(echo "$event" | awk '{print $3}' | sed 's/.sh$//')
