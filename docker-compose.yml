@@ -15,6 +15,7 @@ services:
         - /var/www/paas/destroy-report:/app/destroy-report
         - /var/www/paas/rebuild-report:/app/rebuild-report
         - /var/www/paas/logs:/app/subdomain_logs
+        - /var/www/paas-api/inotify-scripts:/app/inotify-scripts
         - /etc/supervisor/conf.d:/app/inotify-scripts
 # networks:
 #   default:
