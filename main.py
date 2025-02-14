@@ -88,7 +88,7 @@ def deploy_progress():
         print(os.listdir())
         try:
             subdomain = request.json["subdomain"].strip().lower()
-            deploy_subdomain_logs = "deployed_apps_logs/" + subdomain+".json"
+            deploy_subdomain_logs = "../deployed_apps_logs/" + subdomain+".json"
             res =""
             with open(deploy_subdomain_logs, "r") as myfile:
                 res = myfile.read()
