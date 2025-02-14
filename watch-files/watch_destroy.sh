@@ -1,7 +1,7 @@
 #!/bin/bash
 
 WATCH_DIR="/var/www/paas/destroy-report"
-SCRIPT_TO_RUN="/var/www/paas-api/action-files/app_destroy.sh"
+SCRIPT_TO_RUN="/var/www/paas-api/action-scripts/app_destroy.sh"
 
 while true; do
     /usr/bin/inotifywait -e create "$WATCH_DIR" && /bin/bash "$SCRIPT_TO_RUN"
