@@ -40,7 +40,7 @@ PERMISSION FOR WATCH FILES :
 sudo chmod +x /var/www/paas-api/watch-files/watch_destroy.sh
 sudo chown -R root:root /var/www/paas-api/action-scripts/app_destroy.sh
 
-sudo chmod +x /var/www/paas-api/watch-files/watchp_deployment.sh
+sudo chmod +x /var/www/paas-api/watch-files/watch_deploy.sh
 sudo chown -R root:root /var/www/paas-api/action-scripts/app_deployment.sh
 
 sudo chmod +x /var/www/paas-api/watch-files/watch_rebuild.sh
