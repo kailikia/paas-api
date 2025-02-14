@@ -17,6 +17,7 @@ sudo systemctl stop nginx
 sudo ~/.acme.sh/acme.sh --issue -d $subdomain.techcamp.app --standalone &> /var/www/paas/logs/$subdomain/issue-acme-cert.log
 sudo ~/.acme.sh/acme.sh --install-cert --domain $subdomain.techcamp.app --ecc --key-file /root/.acme.sh/$subdomain.techcamp.app_ecc/$subdomain.techcamp.app.key --fullchain-file /root/.acme.sh/$subdomain.techcamp.app_ecc/fullchain.cer &> /var/www/paas/logs/$subdomain/install-acme-cert.log
 sudo systemctl start nginx
+echo "ACME Certificates issued and installed for $subdomain.techcamp.app"
 
 #STEP 3: Copy the sh file from success report with docker steps, into the deployed apps folder
 sudo cp /var/www/paas/success-report/"$subdomain.sh" /var/www/paas/deployed_apps/"$subdomain"/
