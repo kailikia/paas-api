@@ -158,6 +158,34 @@ def get_subdomain_logs(subdomain):
     except Exception as e:
         return {"Error" : str(e)}
 
+
+def get_server_logs(subdomain):
+    try:
+
+        cur_path = "/app/deployed_apps"
+
+        os.chdir(cur_path)
+
+        if os.path.exists(cur_path):
+            deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +"-server.json")
+            print("Subdomain Logs----------------", deploy_subdomain_logs)
+
+            #Check if the file exists
+            if os.path.exists(deploy_subdomain_logs):
+                # Open and read the file content
+                with open(deploy_subdomain_logs, 'r') as file:
+                    file_content = file.read()
+                    return json.loads(file_content)  # Assuming the file contains JSON data
+            else:
+                return {"Error": "Log file does not exist."}
+            return deploy_subdomain_logs
+        else:
+            return {"Error": "Deployed app path doesn't exist." + cur_path }
+    except Exception as e:
+        return {"Error" : str(e)}
+
+
+
 # Service Functions
 
 def digital_ocean_list_domains():
@@ -215,6 +243,27 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
     git_url_for_subdomain= f"git clone --depth 1 {github_url} {clone_path} "
     deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
+
+    # ADD DEPLOY SERVER LOGS JSON FILE
+    deploy_server_logs = os.path.join("../deployed_apps_logs", subdomain +"-server.json")
+    server_file = f"""
+        {
+            "subdomain" : {subdomain},
+            "acme" : "",
+            "docker" : "",
+            "sucess-report" : "",
+            "nginx-files" : "",
+            "symlink" : "",
+            "restart" : "",
+            "complete" : "false"
+        }
+
+        """
+    with open(deploy_server_logs, "a") as servfile:
+        servfile.write(server_file)
+
+    print("Server Subdomain Logs Json File Created -------------------------------------", deploy_subdomain_logs)
+
 
     print("Subdomain Logs----------------", deploy_subdomain_logs)
 

@@ -30,6 +30,10 @@ def sub_domain():
 def subdomain_logs(subdomain):
     return get_subdomain_logs(subdomain)
 
+@app.route("/logs/server/<subdomain>")
+def subdomain_logs(subdomain):
+    return get_server_logs(subdomain)
+
 @app.route("/logs/acme/<subdomain>")
 def acme_logs(subdomain):
     return get_acme_logs(subdomain)
