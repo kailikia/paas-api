@@ -243,6 +243,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
     git_url_for_subdomain= f"git clone --depth 1 {github_url} {clone_path} "
     deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +".json")
+    print("Subdomain Logs----------------", deploy_subdomain_logs)
 
     # ADD DEPLOY SERVER LOGS JSON FILE
     deploy_server_logs = os.path.join("../deployed_apps_logs", subdomain +"-server.json")
@@ -261,9 +262,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         json.dump(server_file, servfile, indent=4)
 
     print("Server Subdomain Logs Json File Created -------------------------------------", deploy_server_logs)
-
-
-    print("Subdomain Logs----------------", deploy_subdomain_logs)
 
     #Delete existing log contents
     open(deploy_subdomain_logs, 'w+').close()
