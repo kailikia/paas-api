@@ -259,10 +259,10 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         }
 
         """
-    with open(deploy_server_logs, "a") as servfile:
+    with open(deploy_server_logs, "w") as servfile:
         servfile.write(server_file)
 
-    print("Server Subdomain Logs Json File Created -------------------------------------", deploy_subdomain_logs)
+    print("Server Subdomain Logs Json File Created -------------------------------------", deploy_server_logs)
 
 
     print("Subdomain Logs----------------", deploy_subdomain_logs)
