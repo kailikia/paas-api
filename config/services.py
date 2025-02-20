@@ -247,8 +247,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
     # ADD DEPLOY SERVER LOGS JSON FILE
     deploy_server_logs = os.path.join("../deployed_apps_logs", subdomain +"-server.json")
-    server_file = {
-            "subdomain" : subdomain,
+    server_file = f"""{{
+            "subdomain" : {subdomain},
             "acme" : "",
             "docker" : "",
             "sucess-report" : "",
@@ -256,10 +256,11 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
             "symlink" : "",
             "restart" : "",
             "complete" : "false"
-        }
+        }}
+        """
 
     with open(deploy_server_logs, "w") as servfile:
-        servfile.write(json.dump(server_file))
+        servfile.write(server_file)
 
     print("Server Subdomain Logs Json File Created -------------------------------------", deploy_server_logs)
 
