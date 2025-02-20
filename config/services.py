@@ -259,7 +259,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         }
 
     with open(deploy_server_logs, "w") as servfile:
-        json.dump(server_file, servfile, indent=4)
+        servfile.write(json.dump(server_file))
 
     print("Server Subdomain Logs Json File Created -------------------------------------", deploy_server_logs)
 
