@@ -32,14 +32,14 @@ sudo cp /var/www/paas/success-report/"$subdomain.sh" /var/www/paas/deployed_apps
 sudo chmod +x /var/www/paas/deployed_apps/"$subdomain"/"$subdomain.sh"
 echo "Copying /var/www/paas/success-report/$subdomain.sh to /var/www/paas/deployed_apps/$subdomain/"
 
-jq --arg msg "Copying the success-report file" '.["success-report"] = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+# jq --arg msg "Copying the success-report file" '.["success-report"] = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 #STEP 4: Build Docker image and deploy container
 echo "Now deploying Docker"
 sudo sh -x "/var/www/paas/deployed_apps/$subdomain/$subdomain.sh" &> /var/www/paas/logs/$subdomain/docker.log
 echo "Docker deployment completed successfully."
 
-jq --arg msg "Docker deployment completed successfully" '.docker = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+# jq --arg msg "Docker deployment completed successfully" '.docker = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 #STEP 5: Copy Nginx config files to sites-available directory
 sudo cp -r /var/www/paas/deployed_nginx_files/* /etc/nginx/sites-available/
@@ -53,17 +53,17 @@ sudo ln -s /etc/nginx/sites-available/"$subdomain.techcamp.app" /etc/nginx/sites
 sudo chmod +x /etc/nginx/sites-enabled/"$subdomain.techcamp.app"
 echo "Copying /etc/nginx/sites-available/$subdomain.techcamp.app to /etc/nginx/sites-enabled/"
 
-jq --arg msg "Symlink created for the sites-available" '.symlink = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+# jq --arg msg "Symlink created for the sites-available" '.symlink = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 #STEP 7: Stop and Start Nginx Service or Kill nginx process and start NGINX
 # sudo kill $(sudo lsof -t -c nginx)
 sudo systemctl reload nginx
 sudo supervisorctl restart all
 
-jq --arg msg "Restarted supervisor and Nginx" '.restart = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+# jq --arg msg "Restarted supervisor and Nginx" '.restart = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 # echo "Reload NGINX and Supervisor"
 
 # Output event detection information
 echo "Event ended"
-jq --arg msg "true" '.complete = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+# jq --arg msg "true" '.complete = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
