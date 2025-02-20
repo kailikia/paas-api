@@ -32,7 +32,7 @@ sudo cp /var/www/paas/success-report/"$subdomain.sh" /var/www/paas/deployed_apps
 sudo chmod +x /var/www/paas/deployed_apps/"$subdomain"/"$subdomain.sh"
 echo "Copying /var/www/paas/success-report/$subdomain.sh to /var/www/paas/deployed_apps/$subdomain/"
 
-# jq --arg msg "Copying the success-report file" '.["success-report"] = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+jq --arg msg "Copying the success-report file" '.["success-report"] = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 #STEP 4: Build Docker image and deploy container
 echo "Now deploying Docker"
