@@ -15,7 +15,7 @@ sudo chmod +x /var/www/paas/deployed_apps_logs/$subdomain
 
 # UPDATE THE JSON FILE FOR STATUS of DEPLOYMENT
 JSON_FILE="/var/www/paas/deployed_apps_logs/$subdomain-server.json"
-sudo chown $USER:$USER "$JSON_FILE"
+sudo chown root:root "$JSON_FILE"
 chmod 644 "$JSON_FILE"
 
 #STEP 2: Issue and Install ACME Certificates for the subdomain

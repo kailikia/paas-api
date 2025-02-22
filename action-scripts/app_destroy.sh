@@ -27,7 +27,9 @@ delete_if_exists() {
 
 # Allow the owner (root) full access to the directories
 sudo chmod -R u+rwx /root/.acme.sh
+sudo chown root:root /etc/nginx/sites-available
 sudo chmod -R u+rwx /etc/nginx/sites-available
+sudo chown root:root /etc/nginx/sites-enabled
 sudo chmod -R u+rwx /etc/nginx/sites-enabled
 sudo chmod -R u+rwx /var/www/paas
 
