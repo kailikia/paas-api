@@ -89,10 +89,10 @@ def deploy_app():
 @app.route('/deploy-progress', methods=["POST"])
 def deploy_progress(): 
     if  request.method == "POST":
-        # print(os.getcwd())
+        
         cur_path = "/app/deployed_apps"
-
         os.chdir(cur_path)
+        
         try:
             subdomain = request.json["subdomain"].strip().lower()
             deploy_subdomain_logs = "../deployed_apps_logs/" +subdomain+".json"
