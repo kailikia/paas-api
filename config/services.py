@@ -259,11 +259,18 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         "complete": False 
     }
 
+
+    # Write JSON safely using a temp file
+    temp_file = deploy_server_logs + ".tmp"
+    with open(temp_file, "w") as servfile:
+        json.dump(server_file, servfile, indent=4)
+
     # Debugging: Print JSON before writing
     print("Generated JSON:", json.dumps(server_file, indent=4))
+    # Rename safely to avoid race conditions
+    os.rename(temp_file, deploy_server_logs)
 
-    with open(deploy_server_logs, "w") as servfile:
-        servfile.write(json.dumps(server_file, indent=4))
+    print(f"JSON file created at: {deploy_server_logs}")
 
     print("Server Subdomain Logs Json File Created -------------------------------------", deploy_server_logs)
 

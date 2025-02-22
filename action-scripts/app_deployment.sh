@@ -11,7 +11,6 @@ subdomain=$(echo "$event" | awk '{print $3}' | sed 's/.sh$//')
 echo "Extracted subdomain: $subdomain"
 sudo mkdir -p /var/www/paas/logs/$subdomain
 sudo chmod +x /var/www/paas/logs/$subdomain
-sudo chmod +x /var/www/paas/deployed_apps_logs/$subdomain
 
 # UPDATE THE JSON FILE FOR STATUS of DEPLOYMENT
 JSON_FILE="/var/www/paas/deployed_apps_logs/$subdomain-server.json"
@@ -46,7 +45,7 @@ jq --arg msg "Docker deployment completed successfully" '.docker = $msg' "$JSON_
 
 
 #STEP 5: Copy Nginx config files to sites-available directory
-sudo cp -r /var/www/paas/deployed_nginx_files/* /etc/nginx/sites-available/
+sudo cp -r /var/www/paas/deployed_nginx_files/"$subdomain.techcamp.app" /etc/nginx/sites-available/
 sudo chmod +x /etc/nginx/sites-available/"$subdomain.techcamp.app"
 echo "Copying Nginx Files"
 
@@ -54,8 +53,8 @@ jq --arg msg "Nginx files copied to sites-available directory" '.["nginx-files"]
 
 
 #STEP 6: Symlink to sites-enabled
-sudo ln -s /etc/nginx/sites-available/"$subdomain.techcamp.app" /etc/nginx/sites-enabled/
 sudo chmod +x /etc/nginx/sites-enabled/"$subdomain.techcamp.app"
+sudo ln -sf /etc/nginx/sites-available/"$subdomain.techcamp.app" /etc/nginx/sites-enabled/
 echo "Copying /etc/nginx/sites-available/$subdomain.techcamp.app to /etc/nginx/sites-enabled/"
 
 jq --arg msg "Symlink created for the sites-available" '.symlink = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
