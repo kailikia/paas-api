@@ -61,11 +61,11 @@ jq --arg msg "Symlink created for the sites-available" '.symlink = $msg' "$JSON_
 
 
 #STEP 7: Reload Nginx and Supervisor
-sudo supervisorctl restart all
+# sudo supervisorctl restart all
 # sudo systemctl restart nginx
-echo "Reload NGINX and Supervisor"
+# echo "Reload NGINX and Supervisor"
 
-jq --arg msg "Restarted supervisor and Nginx" '.restart = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+# jq --arg msg "Restarted supervisor and Nginx" '.restart = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 
 # Output event detection information
