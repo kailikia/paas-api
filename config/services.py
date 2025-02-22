@@ -173,6 +173,7 @@ def get_server_logs(subdomain):
             #Check if the file exists
             if os.path.exists(deploy_server_logs):
                 # Open and read the file content
+                
                 with open(deploy_server_logs, 'r') as file:
                     file_content = file.read()
                     return json.loads(file_content)  # Assuming the file contains JSON data

@@ -60,12 +60,11 @@ echo "Copying /etc/nginx/sites-available/$subdomain.techcamp.app to /etc/nginx/s
 jq --arg msg "Symlink created for the sites-available" '.symlink = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 
-#STEP 7: Reload Nginx and Supervisor
-# sudo supervisorctl restart all
-# sudo systemctl restart nginx
-# echo "Reload NGINX and Supervisor"
+#STEP 7: Reload Nginx 
+sudo systemctl restart nginx
+# echo "Reload NGINX "
 
-# jq --arg msg "Restarted supervisor and Nginx" '.restart = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+jq --arg msg "Restarted Nginx" '.restart = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 
 # Output event detection information
