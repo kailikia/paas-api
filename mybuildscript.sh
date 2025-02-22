@@ -9,7 +9,7 @@ sudo supervisorctl restart all
 # acme.sh --config-home /root/.acme.sh --issue -d vedi.techcamp.app --standalone --cert-home /etc/nginx/ssl/vedi.techcamp.app
 # tail -f /var/log/supervisor/paas_supervisor_stdout.log
 # tail -f /var/www/paas/logs/deploy_supervisor_stdout.log
-# sudo tail -f /var/log/supervisor/supervisord.log
+# sudo tail -f /var/log/supervisor/supervisord.log   ---- supervisor errors
 
 # /bin/bash -c "/usr/bin/inotifywait -e create /var/www/paas/success-report | /bin/bash /var/www/paas-api/action-scripts/app_deployment.sh" >> "$LOG_FILE" 2>&1 
 
