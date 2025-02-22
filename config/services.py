@@ -267,7 +267,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
     # Debugging: Print JSON before writing
     print("Generated JSON:", json.dumps(server_file, indent=4))
-    # Rename safely to avoid race conditions
+
+    # Rename it back to .json safely to avoid race conditions
     os.rename(temp_file, deploy_server_logs)
 
     print(f"JSON file created at: {deploy_server_logs}")

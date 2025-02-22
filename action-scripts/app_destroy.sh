@@ -37,8 +37,8 @@ sudo chmod -R u+rwx /var/www/paas
 delete_if_exists "/root/.acme.sh/${subdomain}.${APP_NAME}_ecc"
 delete_if_exists "/etc/nginx/sites-available/${subdomain}.${APP_NAME}"
 delete_if_exists "/etc/nginx/sites-enabled/${subdomain}.${APP_NAME}"
-sudo systemctl reload nginx
-echo "Step 4: Removed Nginx config files in sites-available and sites-enabled and reloaded nginx."
+sudo systemctl restart nginx
+echo "Step 4: Removed Nginx config files in sites-available and sites-enabled and restart nginx."
 
 delete_if_exists "/var/www/paas/deployed_apps/${subdomain}"
 delete_if_exists "/var/www/paas/deployed_nginx_files/${subdomain}.${APP_NAME}"
@@ -64,7 +64,7 @@ echo "Docker image deleted: ${subdomain}"
 docker system prune -a -f
 
 # Reload NGINX and Supervisor
-sudo systemctl reload nginx
+sudo systemctl restart nginx
 sudo supervisorctl restart all
 
 # Final Step: Completion message

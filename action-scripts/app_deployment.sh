@@ -53,8 +53,8 @@ jq --arg msg "Nginx files copied to sites-available directory" '.["nginx-files"]
 
 
 #STEP 6: Symlink to sites-enabled
-sudo chmod +x /etc/nginx/sites-enabled/"$subdomain.techcamp.app"
 sudo ln -sf /etc/nginx/sites-available/"$subdomain.techcamp.app" /etc/nginx/sites-enabled/
+sudo chmod +x /etc/nginx/sites-enabled/"$subdomain.techcamp.app"
 echo "Copying /etc/nginx/sites-available/$subdomain.techcamp.app to /etc/nginx/sites-enabled/"
 
 jq --arg msg "Symlink created for the sites-available" '.symlink = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
