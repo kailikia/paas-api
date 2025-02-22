@@ -154,7 +154,7 @@ def get_subdomain_logs(subdomain):
                 return {"Error": "Log file does not exist."}
             return deploy_subdomain_logs
         else:
-            return {"Error": "Deployed app path doesn't exist." + cur_path }
+            return {"Error": "Deployed app logs path doesn't exist." + cur_path }
     except Exception as e:
         return {"Error" : str(e)}
 
@@ -167,20 +167,20 @@ def get_server_logs(subdomain):
         os.chdir(cur_path)
 
         if os.path.exists(cur_path):
-            deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain +"-server.json")
-            print("Subdomain Logs----------------", deploy_subdomain_logs)
+            deploy_server_logs = os.path.join("../deployed_apps_logs", subdomain +"-server.json")
+            print("Server Logs Path----------------", deploy_server_logs)
 
             #Check if the file exists
-            if os.path.exists(deploy_subdomain_logs):
+            if os.path.exists(deploy_server_logs):
                 # Open and read the file content
-                with open(deploy_subdomain_logs, 'r') as file:
+                with open(deploy_server_logs, 'r') as file:
                     file_content = file.read()
                     return json.loads(file_content)  # Assuming the file contains JSON data
             else:
-                return {"Error": "Log file does not exist."}
-            return deploy_subdomain_logs
+                return {"Error": "Log file does not exist ..." + deploy_server_logs}
+            return deploy_server_logs
         else:
-            return {"Error": "Deployed app path doesn't exist." + cur_path }
+            return {"Error": "Deployed app logs path doesn't exist." + deploy_server_logs }
     except Exception as e:
         return {"Error" : str(e)}
 
@@ -238,7 +238,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     os.chdir(cur_path)
 
     # if os.path.exists(cur_path):
-    # os.chdir(os.getcwd()+'/deployed_apps')
     clone_path = os.path.join(subdomain)
 
     git_url_for_subdomain= f"git clone --depth 1 {github_url} {clone_path} "
@@ -270,8 +269,6 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
     # Rename it back to .json safely to avoid race conditions
     os.rename(temp_file, deploy_server_logs)
-
-    print(f"JSON file created at: {deploy_server_logs}")
 
     print("Server Subdomain Logs Json File Created -------------------------------------", deploy_server_logs)
 
@@ -461,10 +458,10 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
                        docker build -t {subdomain} {dockerfile_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
                        """)
 
-        print(f"Success report created: {success_file}")
+        print(f"Step 6: Success report created: {success_file}")
 
     except OSError as e:
-        print(f"Error creating success report for {subdomain}: {e}")
+        print(f"Step 6: Error creating success report for {subdomain}: {e}")
 
         
     return True
