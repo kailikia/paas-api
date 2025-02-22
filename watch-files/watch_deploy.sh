@@ -9,11 +9,11 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - Watching for changes in $WATCH_DIR" >> "$LO
 
 if pgrep -f inotifywait > /dev/null; then
     echo "Inotify is already running. Exiting." >> "$LOG_FILE"
-    exit 1
+    exit 0
 fi
 
 
-# /bin/bash -c "/usr/bin/inotifywait -e create /var/www/paas/success-report | /bin/bash /var/www/paas-api/action-scripts/app_deployment.sh" >> "$LOG_FILE" 2>&1 
 /usr/bin/inotifywait -e create /var/www/paas/success-report | /bin/bash /var/www/paas-api/action-scripts/app_deployment.sh >> "$LOG_FILE" 2>&1 
 
+# /bin/bash -c "/usr/bin/inotifywait -e create /var/www/paas/success-report | /bin/bash /var/www/paas-api/action-scripts/app_deployment.sh" >> "$LOG_FILE" 2>&1 
 
