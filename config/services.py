@@ -40,6 +40,23 @@ def digital_ocean_create_subdomain(subdomain):
         print("Failed to create subdomain.------------------------", response.status_code, response.json())
 
 
+def digital_ocean_list_domains():
+    resp = client.domains.list()
+    print("DO List-------",resp)
+    return resp
+
+
+def digital_ocean_delete_subdomain(subdomain):
+    
+    try:
+        client.domains.delete(domain_name=subdomain)
+
+        print("Subdomain deleted from DO successfully!---------------------", subdomain)
+    except Exception as e:
+        print("Failed to delete subdomain from DO .------------------------", str(e))
+
+
+# GET LOGS FUNCTIONS
 def get_docker_logs(subdomain):
     try:
         log_path = "/app/subdomain_logs"
@@ -186,14 +203,7 @@ def get_server_logs(subdomain):
         return {"Error" : str(e)}
 
 
-
-# Service Functions
-
-def digital_ocean_list_domains():
-    resp = client.domains.list()
-    print("DO List-------",resp)
-    return resp
-   
+# Service DB Functions
 def add_subdomain(name,user):
       add_domain = Subdomain(name, user)
       return add_domain
@@ -201,7 +211,6 @@ def add_subdomain(name,user):
 def add_deployed_apps(subdomain_id,github_url,port):
       add_app = DeployedApplication(subdomain_id, github_url, port)
       return add_app
-
 
 def delete_subdomain_and_apps_by_name(subdomain_name):
     try:
@@ -233,9 +242,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     #In windows RUN POWERSHELL AS ADMIN and run command "Set-ExecutionPolicy RemoteSigned"
 
     cur_path = "/app/deployed_apps"
-
-    cp_command = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
-
+    
     os.chdir(cur_path)
 
     # if os.path.exists(cur_path):
@@ -336,11 +343,13 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
         myfile.write(',{"step" : 3, "message" : "Error changing permission for '+subdomain +' ."}')
 
 
-    #STEP 4 : Create an nginx string with variables {port} {subdomain} concatenated and add to an ngix-config file.
-    #Copy Dockerfile to deployed apps
+    #STEP to Copy Dockerfile to deployed apps and get port number
     try:
+        html_files = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
+        flask_files = f"cp /app/flask_apps_requirements/* /app/deployed_apps/{subdomain}"
+
         # Execute the command
-        subprocess.run(cp_command, check=True, shell=True)
+        subprocess.run(flask_files, check=True, shell=True)
         print(f"Docker File copied successfully to {subdomain}.-------------------")
     except subprocess.CalledProcessError as e:
         print(f"Error executing command: {e}----------------------------------------")
@@ -350,6 +359,9 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
     file_count = sum(1 for file_name in files if os.path.isfile(os.path.join('../deployed_apps_logs', file_name)))
     port = 5001 + file_count
+
+
+    #STEP 4 : Create an nginx string with variables {port} {subdomain} concatenated and add to an ngix-config file.
 
     nginx_config = f"""
         server {{   
@@ -412,7 +424,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
     print("Step 4: NGINX Server File Created Successfully-----------------")
 
-    #STEP 5: Add deployed apps
+    #STEP 5: Add deployed apps to db
     subdomain_created = session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).first()
     print("Subdomain---------------", subdomain_created)
     session.add(add_deployed_apps(subdomain_created.id,github_url,port))
@@ -473,6 +485,8 @@ def destroy_application(subdomain):
         os.chdir(cur_path)
 
         delete_subdomain_and_apps_by_name(subdomain)
+
+        digital_ocean_delete_subdomain(subdomain)
 
         destroy_file = os.path.join(os.curdir, subdomain +".sh")
         with open(destroy_file, "w") as file:

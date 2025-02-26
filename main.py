@@ -38,7 +38,6 @@ def server_logs(subdomain):
 def acme_logs(subdomain):
     return get_acme_logs(subdomain)
 
-
 @app.route("/logs/nginx/<subdomain>")
 def nginx_logs(subdomain):
     return get_nginx_logs(subdomain)
@@ -69,6 +68,7 @@ def subdomain():
         return jsonify({"subdomain":"not-available"})
     else:
         return jsonify({"subdomain":"available"}),200
+
 
 @app.route('/deploy-app', methods=["POST", "GET"])
 def deploy_app(): 
