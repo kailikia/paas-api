@@ -504,8 +504,10 @@ def destroy_application(subdomain):
 def rebuild_application(subdomain):
     try:
         # 1. Removing git folder
-        app_dir=f"/app/deployed_apps/{subdomain}"
-        os.chdir(app_dir)
+        cur_path="/app/deployed_apps"
+        os.chdir(cur_path)
+
+        app_dir = os.path.join(subdomain)
 
         if os.path.exists(app_dir):
             try:
@@ -525,7 +527,7 @@ def rebuild_application(subdomain):
         print("STEP 2 : Github URL and Port---------------------------",  github_url, port)
 
         # 3. Cloning latest Github URL
-        cur_path = "/app/deployed_apps"
+        cur_path="/app/deployed_apps"
         os.chdir(cur_path)
         clone_path = os.path.join(subdomain)
 
