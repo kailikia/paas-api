@@ -488,7 +488,7 @@ def destroy_application(subdomain):
 
         digital_ocean_delete_subdomain(subdomain)
 
-        dest_file = os.path.join(os.curdir, subdomain +".sh")
+        dest_file = os.path.join(subdomain +".sh")
 
         if os.path.exists(dest_file):
             shutil.rmtree(dest_file)
@@ -510,7 +510,8 @@ def destroy_application(subdomain):
 def rebuild_application(subdomain):
     try:
         # 1. Removing git folder
-        cur_path="/app/deployed_apps"
+        cur_path = "/var/www/paas/deployed_apps"
+        # cur_path="/app/deployed_apps"
         os.chdir(cur_path)
 
         app_dir = os.path.join(subdomain)
