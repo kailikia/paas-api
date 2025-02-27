@@ -571,11 +571,11 @@ def rebuild_application(subdomain):
 
             # Execute the command
             subprocess.run(flask_files, check=True, shell=True)
-            print(f"STEP 6 : Docker File copied successfully to {subdomain}.-------------------")
+            print(f"STEP 5 : Docker File copied successfully to {subdomain}.-------------------")
         except subprocess.CalledProcessError as e:
-            print(f"STEP 6 : Error executing command: {e}----------------------------------------")
+            print(f"STEP 5 : Error executing command: {e}----------------------------------------")
     
-    
+
         # 6. Creating sh file to run the container
         rep_path = "/app/rebuild-report"
         os.chdir(rep_path)
