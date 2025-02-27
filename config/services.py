@@ -346,7 +346,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
     #STEP to Copy Dockerfile to deployed apps and get port number
     try:
         html_files = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
-        flask_files = f"cp /app/flask_apps_requirements/* /app/deployed_apps/{subdomain}"
+        flask_files = f"cp /app/flask_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
 
         # Execute the command
         subprocess.run(flask_files, check=True, shell=True)

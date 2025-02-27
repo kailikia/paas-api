@@ -17,7 +17,7 @@ APP_NAME="techcamp.app"
 echo "Step 3: Deleting files and folders..."
 
 delete_if_exists() {
-    if [ -e "$1" ]; then
+    if [ -e "$1" ] || [ -L "$1" ]; then
         sudo rm -rf "$1"
         echo "Deleted: $1"
     else
@@ -27,15 +27,14 @@ delete_if_exists() {
 
 # Allow the owner (root) full access to the directories
 sudo chmod -R u+rwx /root/.acme.sh
-sudo chown root:root /etc/nginx/sites-available
 sudo chmod -R u+rwx /etc/nginx/sites-available
-sudo chown root:root /etc/nginx/sites-enabled
 sudo chmod -R u+rwx /etc/nginx/sites-enabled
 sudo chmod -R u+rwx /var/www/paas
 
 # Call delete_if_exists for each file or folder
 delete_if_exists "/root/.acme.sh/${subdomain}.${APP_NAME}_ecc"
 delete_if_exists "/etc/nginx/sites-available/${subdomain}.${APP_NAME}"
+sudo unlink "/etc/nginx/sites-enabled/${subdomain}.${APP_NAME}"
 delete_if_exists "/etc/nginx/sites-enabled/${subdomain}.${APP_NAME}"
 sudo systemctl restart nginx
 echo "Step 4: Removed Nginx config files in sites-available and sites-enabled and restart nginx."
@@ -44,7 +43,7 @@ delete_if_exists "/var/www/paas/deployed_apps/${subdomain}"
 delete_if_exists "/var/www/paas/deployed_nginx_files/${subdomain}.${APP_NAME}"
 #delete_if_exists "/var/www/paas/logs/${subdomain}"
 delete_if_exists "/var/www/paas/success-report/${subdomain}.sh"
-delete_if_exists "/var/www/paas/deployed_app_logs/${subdomain}.json"
+delete_if_exists "/var/www/paas/deployed_apps_logs/${subdomain}.json"
 
 # Step 4: Delete record from the database
 echo "Step 5: Deleting record from database..."
@@ -65,7 +64,6 @@ docker system prune -a -f
 
 # Reload NGINX and Supervisor
 sudo systemctl restart nginx
-sudo supervisorctl restart all
 
 # Final Step: Completion message
 echo "Application removal completed successfully for subdomain: ${subdomain}."
