@@ -513,17 +513,17 @@ def rebuild_application(subdomain):
             try:
                 # Using subprocess to remove the folder
                 subprocess.run(['rm', '-rf', app_dir], check=True)
-                print(f"STEP 1 : Successfully removed {app_dir}")
+                print(f"STEP 1 : Successfully removed {app_dir} -------------------------------------------------")
             except subprocess.CalledProcessError as e:
-                print(f"STEP 1 : Error occurred while removing {app_dir}: {e}")
+                print(f"STEP 1 : Error occurred while removing {app_dir}: {e} ---------------------------------")
         else:
-            print(f"Directory {app_dir} does not exist.")
+            print(f"STEP 1 : Directory {app_dir} does not exist.------------------------------------------------")
 
         # 2. Fetching the github url and port from DB
         result = session.query(DeployedApplication.github_url, DeployedApplication.port).join(Subdomain).filter(Subdomain.name == subdomain.strip().lower()).first()
         print("STEP 2 : Get Github URL and Port From DB result ---------------------------",  result)
 
-        github_url, port = result[0]
+        github_url, port = result
         print("STEP 2 : Github URL and Port---------------------------",  github_url, port)
 
         # 3. Cloning latest Github URL
