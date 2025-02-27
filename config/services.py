@@ -511,16 +511,18 @@ def rebuild_application(subdomain):
             try:
                 # Using subprocess to remove the folder
                 subprocess.run(['rm', '-rf', app_dir], check=True)
-                print(f"Successfully removed {app_dir}")
+                print(f"STEP 1 : Successfully removed {app_dir}")
             except subprocess.CalledProcessError as e:
-                print(f"Error occurred while removing {app_dir}: {e}")
+                print(f"STEP 1 : Error occurred while removing {app_dir}: {e}")
         else:
             print(f"Directory {app_dir} does not exist.")
 
         # 2. Fetching the github url and port from DB
         result = session.query(DeployedApplication.github_url, DeployedApplication.port).join(Subdomain).filter(Subdomain.name == subdomain.strip().lower()).first()
+        print("STEP 2 : Get Github URL and Port From DB result ---------------------------",  result)
+
         github_url, port = result[0]
-        print("Github URL and Port---------------------------",  github_url, port)
+        print("STEP 2 : Github URL and Port---------------------------",  github_url, port)
 
         # 3. Cloning latest Github URL
         cur_path = "/app/deployed_apps"
@@ -530,9 +532,9 @@ def rebuild_application(subdomain):
         git_url_for_subdomain= f"git clone --depth 1 {github_url} {clone_path} "
 
         if subprocess.run(git_url_for_subdomain, shell=True).returncode == 0:
-            print(f"Re-deployment Successfully cloned {github_url} to {subdomain}---------------")
+            print(f"STEP 3 : Re-deployment Successfully cloned {github_url} to {subdomain}---------------")
         else:
-            print(f"Error cloning {github_url} to {subdomain}---------------")
+            print(f"STEP 3 : Error cloning {github_url} to {subdomain}---------------")
 
         # 4. Remove .git folder
         try:
@@ -547,9 +549,9 @@ def rebuild_application(subdomain):
             
             if os.path.exists(git_folder_path):
                 shutil.rmtree(git_folder_path)
-                print(f"The .git folder in {clone_path} has been removed.")
+                print(f"STEP 4 : The .git folder in {clone_path} has been removed.---------------------------------")
             else:
-                print(f"The .git folder in {clone_path} does not exist.")
+                print(f"STEP 4 : The .git folder in {clone_path} does not exist.------------------------------------")
         except Exception as e:
             print("Redeploy App Error delete .git folder-------------", e)
 
@@ -563,10 +565,10 @@ def rebuild_application(subdomain):
                        docker build -t {subdomain} {app_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
                        """)
 
-        print(f"Re-build report file created: {rebuild_file}")
+        print(f"STEP 5 : Re-build report file created: {rebuild_file}")
 
     except OSError as e:
-        print(f"Error creating rebuild file for {subdomain}: {e}")
+        print(f"STEP 5 : Error creating rebuild file for {subdomain}: {e}")
 
     return True 
 
