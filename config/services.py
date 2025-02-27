@@ -488,7 +488,7 @@ def destroy_application(subdomain):
 
         digital_ocean_delete_subdomain(subdomain)
 
-        dest_file = os.path.join(os.curdir, +subdomain +".sh")
+        dest_file = os.path.join(os.curdir, subdomain +".sh")
 
         if os.path.exists(dest_file):
             shutil.rmtree(dest_file)
