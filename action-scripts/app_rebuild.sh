@@ -6,8 +6,9 @@ echo "Rebuild App Event detected: $event"
 
 sleep 5
 
+# In this rebuild file, the extracted subdomain is re_subdomain hence no need to add re before subdomain again
 # Step 1: Extract subdomain from the event
-subdomain=$(echo "$event" | awk '{print $3}' | sed 's/.sh$//')
+subdomain=$(echo "$event" | awk '{print $3}' | sed 's/^re_//; s/.sh$//')
 echo "Extracted subdomain: $subdomain"
 
 # Step 2: Remove the Docker container
@@ -23,11 +24,12 @@ echo "Docker image deleted: ${subdomain}"
 docker system prune -a -f
 
 #STEP 4: Build Docker image and deploy container
-sudo cp /var/www/paas/rebuild-report/re_"$subdomain.sh" /var/www/paas/deployed_apps/"$subdomain"/
-sudo chmod +x /var/www/paas/deployed_apps/"$subdomain"/re_"$subdomain.sh"
-sudo sh -x "/var/www/paas/deployed_apps/$subdomain/re_$subdomain.sh" &> /var/www/paas/logs/$subdomain/rebuild.log
+sudo cp /var/www/paas/rebuild-report/"re_$subdomain.sh" /var/www/paas/deployed_apps/"$subdomain"/
+sudo chmod +x /var/www/paas/deployed_apps/"$subdomain"/"re_$subdomain.sh"
 echo "Copying /var/www/paas/rebuild-report/re_$subdomain.sh to /var/www/paas/deployed_apps/$subdomain/"
-echo "Now rebuilding the application."
+
+sudo sh -x "/var/www/paas/deployed_apps/$subdomain/re_$subdomain.sh" &> /var/www/paas/logs/$subdomain/rebuild.log
+echo "Now rebuilding the application docker container."
 
 
 # Final Step: Completion message

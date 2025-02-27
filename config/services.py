@@ -569,7 +569,7 @@ def rebuild_application(subdomain):
 
         rebuild_file = os.path.join(rep_path , "re_"+subdomain +".sh")
 
-        if os.path.isfile(rebuild_file):  # Ensure it's a file
+        if os.path.isfile(rebuild_file):  
             os.remove(rebuild_file)
             
         print(f"STEP 5 : The pre existing rebuild report has been removed.---------------------------------")
