@@ -563,7 +563,20 @@ def rebuild_application(subdomain):
         except Exception as e:
             print("Redeploy App Error delete .git folder-------------", e)
 
-        # 5. Creating sh file to run the container
+
+        #STEP 5 to Copy Dockerfile to deployed apps
+        try:
+            html_files = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
+            flask_files = f"cp /app/flask_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
+
+            # Execute the command
+            subprocess.run(flask_files, check=True, shell=True)
+            print(f"STEP 6 : Docker File copied successfully to {subdomain}.-------------------")
+        except subprocess.CalledProcessError as e:
+            print(f"STEP 6 : Error executing command: {e}----------------------------------------")
+    
+    
+        # 6. Creating sh file to run the container
         rep_path = "/app/rebuild-report"
         os.chdir(rep_path)
 
@@ -572,7 +585,7 @@ def rebuild_application(subdomain):
         if os.path.isfile(rebuild_file):  
             os.remove(rebuild_file)
             
-        print(f"STEP 5 : The pre existing rebuild report has been removed.---------------------------------")
+        print(f"STEP 6 : The pre existing rebuild report has been removed.---------------------------------")
         dockerfile_dir=f"/var/www/paas/deployed_apps/{subdomain}"
 
         with open(rebuild_file, "w") as file:
@@ -580,10 +593,10 @@ def rebuild_application(subdomain):
                        docker build -t {subdomain} {dockerfile_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
                        """)
 
-        print(f"STEP 6 : Re-build report file created: {rebuild_file}")
+        print(f"STEP 7 : Re-build report file created: {rebuild_file}")
 
     except OSError as e:
-        print(f"STEP 6 : Error creating rebuild file for {subdomain}: {e}")
+        print(f"STEP 7 : Error creating rebuild file for {subdomain}: {e}")
 
     return True 
 
