@@ -488,10 +488,10 @@ def destroy_application(subdomain):
 
         digital_ocean_delete_subdomain(subdomain)
 
-        dest_file = os.path.join(subdomain +".sh")
+        dest_file = os.path.join(cur_path, subdomain +".sh")
 
-        if os.path.exists(dest_file):
-            shutil.rmtree(dest_file)
+        if os.path.isfile(dest_file):  # Ensure it's a file
+            os.remove(dest_file)
             print(f"STEP 5 : The pre existing destroy report has been removed.---------------------------------")
 
         destroy_file = os.path.join(os.curdir, subdomain +".sh")
@@ -569,9 +569,10 @@ def rebuild_application(subdomain):
 
         rebuild_file = os.path.join(rep_path , "re_"+subdomain +".sh")
 
-        if os.path.exists(rebuild_file):
-            shutil.rmtree(rebuild_file)
-            print(f"STEP 5 : The pre existing rebuild report has been removed.---------------------------------")
+        if os.path.isfile(rebuild_file):  # Ensure it's a file
+            os.remove(rebuild_file)
+            
+        print(f"STEP 5 : The pre existing rebuild report has been removed.---------------------------------")
 
         with open(rebuild_file, "w") as file:
             file.write(f"""
