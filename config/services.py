@@ -510,8 +510,7 @@ def destroy_application(subdomain):
 def rebuild_application(subdomain):
     try:
         # 1. Removing git folder
-        cur_path = "/var/www/paas/deployed_apps"
-        # cur_path="/app/deployed_apps"
+        cur_path="/app/deployed_apps"
         os.chdir(cur_path)
 
         app_dir = os.path.join(subdomain)
