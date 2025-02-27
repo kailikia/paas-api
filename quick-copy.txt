@@ -15,4 +15,4 @@ systemctl status supervisor
 sudo supervisorctl restart all
 docker logs -f paas-api
 
-https://github.com/fridah51/IMS-System.git
+https://github.com/fridah51/flask-alchemy.git

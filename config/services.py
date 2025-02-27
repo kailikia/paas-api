@@ -504,7 +504,7 @@ def destroy_application(subdomain):
 def rebuild_application(subdomain):
     try:
         # 1. Removing git folder
-        app_dir=f"/var/www/paas/deployed_apps/{subdomain}"
+        app_dir=f"/app/deployed_apps/{subdomain}"
         os.chdir(app_dir)
 
         if os.path.exists(app_dir):
@@ -566,7 +566,7 @@ def rebuild_application(subdomain):
         print(f"Re-build report file created: {rebuild_file}")
 
     except OSError as e:
-        print(f"Error creating destroy file for {subdomain}: {e}")
+        print(f"Error creating rebuild file for {subdomain}: {e}")
 
     return True 
 

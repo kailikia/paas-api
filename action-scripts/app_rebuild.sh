@@ -28,7 +28,7 @@ echo "Copying /var/www/paas/rebuild-report/re_$subdomain.sh to /var/www/paas/dep
 echo "Now rebuilding the application."
 
 # Reload NGINX and Supervisor
-sudo supervisorctl restart all
+sudo systemctl restart nginx
 
 # Final Step: Completion message
 echo "Re-Deploy Application completed successfully for subdomain: ${subdomain}."

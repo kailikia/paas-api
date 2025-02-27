@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify 
 from flask_cors import CORS
-import concurrent.futures
 from config.models import DeployedApplication
 from config.services import *
 import json
