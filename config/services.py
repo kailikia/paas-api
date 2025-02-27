@@ -513,7 +513,7 @@ def rebuild_application(subdomain):
         cur_path="/app/deployed_apps"
         os.chdir(cur_path)
 
-        app_dir = os.path.join(subdomain)
+        app_dir = os.path.join(cur_path, subdomain)
 
         if os.path.exists(app_dir):
             try:
