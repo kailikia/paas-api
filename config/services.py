@@ -567,7 +567,7 @@ def rebuild_application(subdomain):
         rep_path = "/app/rebuild-report"
         os.chdir(rep_path)
 
-        rebuild_file = os.path.join("re_"+subdomain +".sh")
+        rebuild_file = os.path.join(rep_path + "re_"+subdomain +".sh")
 
         if os.path.exists(rebuild_file):
             shutil.rmtree(rebuild_file)
