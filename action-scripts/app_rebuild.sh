@@ -2,7 +2,7 @@
 
 # Step 0: Initialize
 read event
-echo "Deploy App Event detected: $event"
+echo "Rebuild App Event detected: $event"
 
 sleep 5
 

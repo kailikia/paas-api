@@ -488,6 +488,12 @@ def destroy_application(subdomain):
 
         digital_ocean_delete_subdomain(subdomain)
 
+        dest_file = os.path.join(os.curdir, +subdomain +".sh")
+
+        if os.path.exists(dest_file):
+            shutil.rmtree(dest_file)
+            print(f"STEP 5 : The pre existing destroy report has been removed.---------------------------------")
+
         destroy_file = os.path.join(os.curdir, subdomain +".sh")
         with open(destroy_file, "w") as file:
             file.write(f"""
@@ -558,19 +564,24 @@ def rebuild_application(subdomain):
             print("Redeploy App Error delete .git folder-------------", e)
 
         # 5. Creating sh file to run the container
-        cur_path = "/app/rebuild-report"
-        os.chdir(cur_path)
+        rep_path = "/app/rebuild-report"
+        os.chdir(rep_path)
 
         rebuild_file = os.path.join(os.curdir, "re_"+subdomain +".sh")
+
+        if os.path.exists(rebuild_file):
+            shutil.rmtree(rebuild_file)
+            print(f"STEP 5 : The pre existing rebuild report has been removed.---------------------------------")
+
         with open(rebuild_file, "w") as file:
             file.write(f"""
                        docker build -t {subdomain} {app_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
                        """)
 
-        print(f"STEP 5 : Re-build report file created: {rebuild_file}")
+        print(f"STEP 6 : Re-build report file created: {rebuild_file}")
 
     except OSError as e:
-        print(f"STEP 5 : Error creating rebuild file for {subdomain}: {e}")
+        print(f"STEP 6 : Error creating rebuild file for {subdomain}: {e}")
 
     return True 
 
