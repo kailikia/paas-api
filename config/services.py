@@ -573,10 +573,11 @@ def rebuild_application(subdomain):
             os.remove(rebuild_file)
             
         print(f"STEP 5 : The pre existing rebuild report has been removed.---------------------------------")
+        dockerfile_dir=f"/var/www/paas/deployed_apps/{subdomain}"
 
         with open(rebuild_file, "w") as file:
             file.write(f"""
-                       docker build -t {subdomain} {app_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
+                       docker build -t {subdomain} {dockerfile_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
                        """)
 
         print(f"STEP 6 : Re-build report file created: {rebuild_file}")
