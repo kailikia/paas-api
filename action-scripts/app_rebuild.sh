@@ -4,6 +4,8 @@
 read event
 echo "Deploy App Event detected: $event"
 
+sleep 5
+
 # Step 1: Extract subdomain from the event
 subdomain=$(echo "$event" | awk '{print $3}' | sed 's/.sh$//')
 echo "Extracted subdomain: $subdomain"
@@ -27,8 +29,6 @@ sudo sh -x "/var/www/paas/deployed_apps/$subdomain/re_$subdomain.sh" &> /var/www
 echo "Copying /var/www/paas/rebuild-report/re_$subdomain.sh to /var/www/paas/deployed_apps/$subdomain/"
 echo "Now rebuilding the application."
 
-# Reload NGINX and Supervisor
-sudo systemctl restart nginx
 
 # Final Step: Completion message
 echo "Re-Deploy Application completed successfully for subdomain: ${subdomain}."
