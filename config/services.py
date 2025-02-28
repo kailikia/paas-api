@@ -438,7 +438,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
     #STEP 5: Add deployed apps to db
     subdomain_created = session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).first()
     print("Subdomain---------------", subdomain_created)
-    session.add(add_deployed_apps(subdomain_created.id,github_url,port))
+    session.add(add_deployed_apps(subdomain_created.id,github_url,port, choice))
     session.commit()
  
     try:
@@ -576,16 +576,28 @@ def rebuild_application(subdomain):
 
 
         #STEP 5 to Copy Dockerfile to deployed apps
-        try:
-            html_files = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
-            flask_files = f"cp /app/flask_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
+        choice = session.query(DeployedApplication.app_type).join(Subdomain).filter(Subdomain.name == subdomain.strip().lower()).first()
 
-            # Execute the command
-            subprocess.run(flask_files, check=True, shell=True)
-            print(f"STEP 5 : Docker File copied successfully to {subdomain}.-------------------")
-        except subprocess.CalledProcessError as e:
-            print(f"STEP 5 : Error executing command: {e}----------------------------------------")
-    
+        if choice == 'flask':
+            try:
+                flask_files = f"cp /app/flask_apps_requirements/* /app/deployed_apps/{subdomain}"
+
+                # Execute the command
+                subprocess.run(flask_files, check=True, shell=True)
+                print(f"Docker File copied successfully to {subdomain}.-------------------")
+            except subprocess.CalledProcessError as e:
+                print(f"Error executing command: {e}----------------------------------------")
+        
+        elif choice == 'html':
+            try:
+                html_files = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
+
+                # Execute the command
+                subprocess.run(html_files, check=True, shell=True)
+                print(f"Docker File copied successfully to {subdomain}.-------------------")
+            except subprocess.CalledProcessError as e:
+                print(f"Error executing command: {e}----------------------------------------")
+        
 
         # 6. Creating sh file to run the container
         rep_path = "/app/rebuild-report"

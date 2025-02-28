@@ -20,11 +20,13 @@ class DeployedApplication(Base):
     subdomain_id =  Column(Integer, ForeignKey('subdomains.id'))
     github_url = Column("github_url", String(100))
     port = Column("port", Integer)
+    app_type = Column("subdomain", String(100))
 
-    def __init__(self, subdomain_id, github_url, port):
+    def __init__(self, subdomain_id, github_url, port, choice):
         self.subdomain_id = subdomain_id
         self.github_url = github_url
         self.port = port
+        self.app_type = choice
 
 class DeployedDatabase(Base):
     __tablename__ = "deployed_databases"
