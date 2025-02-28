@@ -11,6 +11,8 @@ subdomain=$(echo "$event" | awk '{print $3}' | sed 's/.sh$//')
 echo "Extracted subdomain: $subdomain"
 sudo mkdir -p /var/www/paas/logs/$subdomain
 sudo chmod +x /var/www/paas/logs/$subdomain
+sudo chmod +x /var/www/paas/db-create
+
 
 # UPDATE THE JSON FILE FOR STATUS of DEPLOYMENT
 JSON_FILE="/var/www/paas/deployed_apps_logs/$subdomain-server.json"
@@ -28,7 +30,15 @@ echo "ACME Certificates issued and installed for $subdomain.techcamp.app"
 jq --arg sub "$subdomain" '.acme = "ACME Certificates issued and installed for \($sub).techcamp.app"' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 
-#STEP 3: Copy the sh file from success report with docker steps, into the deployed apps folder
+# STEP 3: CREATE DATABASE WITH POSTGRESQL
+echo "Now creating Database with Postgres"
+sudo sh -x "/var/www/paas/db-create/$subdomain.sh" &> /var/www/paas/logs/$subdomain/db-create.log
+
+jq --arg msg "Creating the database on postgres" '.["postgres"] = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+echo "Database created for $subdomain"
+
+
+#STEP 4: Copy the sh file from success report with docker steps, into the deployed apps folder
 sudo cp /var/www/paas/success-report/"$subdomain.sh" /var/www/paas/deployed_apps/"$subdomain"/
 sudo chmod +x /var/www/paas/deployed_apps/"$subdomain"/"$subdomain.sh"
 echo "Copying /var/www/paas/success-report/$subdomain.sh to /var/www/paas/deployed_apps/$subdomain/"
@@ -36,7 +46,7 @@ echo "Copying /var/www/paas/success-report/$subdomain.sh to /var/www/paas/deploy
 jq --arg msg "Copying the success-report file" '.["success-report"] = $msg' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
 
 
-#STEP 4: Build Docker image and deploy container
+#STEP 5: Build Docker image and deploy container
 echo "Now deploying Docker"
 sudo sh -x "/var/www/paas/deployed_apps/$subdomain/$subdomain.sh" &> /var/www/paas/logs/$subdomain/docker.log
 echo "Docker deployment completed successfully."

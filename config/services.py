@@ -262,6 +262,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
         "success-report": "",
         "nginx-files": "",
         "symlink": "",
+        "postgres": "",
         "restart": "",
         "complete": False 
     }
@@ -466,6 +467,28 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
 
     # os.chdir('..')
 
+
+    # STEP 7: Create DB with Postgresql 
+    try:
+        db_file = os.path.join("../db-create", subdomain +".sh")
+        with open(db_file, "a") as file:
+            file.write(f"""#!/bin/bash
+sudo -u postgres psql -c "CREATE DATABASE {subdomain} OWNER postgres;"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE {subdomain} TO postgres;"
+""")
+
+        with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(',{"step" : 7, "message" : "Database creation file created: {db_file}"}')
+        print(f"Step 7: Database creation with Postgresql successful: {db_file}")
+        
+    except OSError as e:
+        with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(',{"step" : 7, "message" : "Error creating Database with Postgresql"}')
+
+        print(f"Step 7: Error creating  Database with Postgresql for {subdomain}: {e}")
+
+
+    # STEP 8: Create Success report  
     try:
     # Ensure the folder exists before setting permissions
         # folder_path = "../success-report"
@@ -480,15 +503,18 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
         with open(success_file, "a") as file:
             file.write(f"""
                        docker build -t {subdomain} {dockerfile_dir} && docker run -d -p {port}:80 --name {subdomain}-app {subdomain} 
+
                        """)
 
-        print(f"Step 6: Success report created: {success_file}")
+        print(f"Step 8: Success report created: {success_file}")
 
     except OSError as e:
-        print(f"Step 6: Error creating success report for {subdomain}: {e}")
+        print(f"Step 8: Error creating success report for {subdomain}: {e}")
 
-        
+
+
     return True
+
 
 def destroy_application(subdomain):
     try:
@@ -577,7 +603,7 @@ def rebuild_application(subdomain):
 
         #STEP 5 to Copy Dockerfile to deployed apps
         choice = session.query(DeployedApplication.app_type).join(Subdomain).filter(Subdomain.name == subdomain.strip().lower()).first()
- 
+
         print("Choice 1 -------------------------------", choice[0])
         if choice[0] == 'flask':
             try:
