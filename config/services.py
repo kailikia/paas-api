@@ -578,8 +578,8 @@ def rebuild_application(subdomain):
         #STEP 5 to Copy Dockerfile to deployed apps
         choice = session.query(DeployedApplication.app_type).join(Subdomain).filter(Subdomain.name == subdomain.strip().lower()).first()
  
-        print("Choice -------------------------------", choice)
-        if choice == 'flask':
+        print("Choice 1 -------------------------------", choice[0])
+        if choice[0] == 'flask':
             try:
                 flask_files = f"cp /app/flask_apps_requirements/* /app/deployed_apps/{subdomain}"
 
@@ -589,7 +589,7 @@ def rebuild_application(subdomain):
             except subprocess.CalledProcessError as e:
                 print(f"STEP 5 : Error executing command: {e}----------------------------------------")
         
-        elif choice == 'html':
+        elif choice[0] == 'html':
             try:
                 html_files = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
 
