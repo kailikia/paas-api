@@ -208,8 +208,8 @@ def add_subdomain(name,user):
       add_domain = Subdomain(name, user)
       return add_domain
 
-def add_deployed_apps(subdomain_id,github_url,port):
-      add_app = DeployedApplication(subdomain_id, github_url, port)
+def add_deployed_apps(subdomain_id,github_url,port, choice):
+      add_app = DeployedApplication(subdomain_id, github_url, port, choice)
       return add_app
 
 def delete_subdomain_and_apps_by_name(subdomain_name):
