@@ -473,8 +473,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
         db_file = os.path.join("../db-create", subdomain +".sh")
         with open(db_file, "a") as file:
             file.write(f"""#!/bin/bash
-sudo -u postgres psql -c "CREATE DATABASE {subdomain} OWNER postgres;"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE {subdomain} TO postgres;"
+sudo -u postgres PGPASSWORD="12345" psql -c "CREATE DATABASE {subdomain} OWNER postgres;"
+sudo -u postgres PGPASSWORD="12345" psql -c "GRANT ALL PRIVILEGES ON DATABASE {subdomain} TO postgres;"
 """)
 
         with open(deploy_subdomain_logs, "a") as myfile:
