@@ -461,11 +461,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(',{"step" : 6, "message" : "Error adding subdomain for '+subdomain +'.techcamp.app to DigitalOcean DNS"}')
 
-    #Close Log file and RETURN BACK TO ROUTE
-    with open(deploy_subdomain_logs, "a") as myfile:
-            myfile.write(']')
-
-    # os.chdir('..')
+    print("Step 6: Deployed App Subdomain Record Added to Digital Ocean-----------------")        
 
 
     # STEP 7: Create DB with Postgresql 
@@ -479,6 +475,7 @@ sudo -u postgres PGPASSWORD="12345" psql -c "GRANT ALL PRIVILEGES ON DATABASE {s
 
         with open(deploy_subdomain_logs, "a") as myfile:
             myfile.write(',{"step" : 7, "message" : "Database creation file created: '+ db_file +' .techcamp.app"}')
+
         print(f"Step 7: Database creation with Postgresql successful: {db_file}")
         
     except OSError as e:
@@ -486,6 +483,11 @@ sudo -u postgres PGPASSWORD="12345" psql -c "GRANT ALL PRIVILEGES ON DATABASE {s
             myfile.write(',{"step" : 7, "message" : "Error creating Database with Postgresql for '+subdomain +' .techcamp.app"}')
 
         print(f"Step 7: Error creating  Database with Postgresql for {subdomain}: {e}")
+
+
+    #Close Log file and RETURN BACK TO ROUTE
+    with open(deploy_subdomain_logs, "a") as myfile:
+            myfile.write(']')
 
 
     # STEP 8: Create Success report  
