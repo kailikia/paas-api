@@ -438,7 +438,7 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
     #STEP 5: Add deployed apps to db
     subdomain_created = session.query(Subdomain).filter(Subdomain.name==subdomain.strip().lower()).first()
     print("Subdomain---------------", subdomain_created)
-    session.add(add_deployed_apps(subdomain_created.id,github_url,port, choice))
+    session.add(add_deployed_apps(subdomain_created.id,github_url,port,choice))
     session.commit()
  
     try:
