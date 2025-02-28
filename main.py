@@ -76,9 +76,10 @@ def deploy_app():
             subdomain = request.json["subdomain"].strip().lower()
             github_url=request.json["github_url"].strip().lower()
             user = "test"
+            choice = request.json["choice"].strip().lower()
 
             # Start SSH or Powershell Script to deploy app
-            deploy_html_by_ssh_subprocess(github_url, subdomain, user) 
+            deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice) 
 
             return jsonify({"message":"sub domain added and app deployed succcessfully","status": 1}),200
         except Exception as e:

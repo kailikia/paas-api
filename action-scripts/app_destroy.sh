@@ -7,8 +7,7 @@ echo "Destroy App Event detected: $event"
 # Step 1: Extract subdomain from the event
 subdomain=$(echo "$event" | awk '{print $3}' | sed 's/.sh$//')
 echo "Extracted subdomain: $subdomain"
-mkdir -p /var/www/logs/$subdomain
-echo "Created logs directory: /var/www/logs/$subdomain"
+
 
 # Step 2: Define app name
 APP_NAME="techcamp.app"

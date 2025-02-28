@@ -237,7 +237,7 @@ def delete_subdomain_and_apps_by_name(subdomain_name):
 
 # Deploy and Server Functions 
 
-def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
+def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
     error_in_step = 0
     #In windows RUN POWERSHELL AS ADMIN and run command "Set-ExecutionPolicy RemoteSigned"
 
@@ -344,16 +344,27 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user):
 
 
     #STEP to Copy Dockerfile to deployed apps and get port number
-    try:
-        html_files = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
-        flask_files = f"cp /app/flask_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
+    if choice == 'flask':
+        try:
+            flask_files = f"cp /app/flask_apps_requirements/* /app/deployed_apps/{subdomain}"
 
-        # Execute the command
-        subprocess.run(flask_files, check=True, shell=True)
-        print(f"Docker File copied successfully to {subdomain}.-------------------")
-    except subprocess.CalledProcessError as e:
-        print(f"Error executing command: {e}----------------------------------------")
-    
+            # Execute the command
+            subprocess.run(flask_files, check=True, shell=True)
+            print(f"Docker File copied successfully to {subdomain}.-------------------")
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing command: {e}----------------------------------------")
+        
+    elif choice == 'html':
+        try:
+            html_files = f"cp /app/html_apps_requirements/Dockerfile /app/deployed_apps/{subdomain}"
+
+            # Execute the command
+            subprocess.run(html_files, check=True, shell=True)
+            print(f"Docker File copied successfully to {subdomain}.-------------------")
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing command: {e}----------------------------------------")
+        
+
     files = os.listdir('../deployed_apps_logs')
     # Count the number of files (excluding directories
 
