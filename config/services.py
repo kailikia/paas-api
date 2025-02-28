@@ -465,24 +465,44 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
 
 
     # STEP 7: Create DB with Postgresql 
-    try:
-        db_file = os.path.join("../db-create", subdomain +".sh")
-        with open(db_file, "a") as file:
-            file.write(f"""#!/bin/bash
-sudo -u postgres PGPASSWORD="12345" psql -c "CREATE DATABASE {subdomain} OWNER postgres;"
-sudo -u postgres PGPASSWORD="12345" psql -c "GRANT ALL PRIVILEGES ON DATABASE {subdomain} TO postgres;"
-""")
+    if choice ==  'flask':
+        try:
+            db_file = os.path.join("../db-create", subdomain +".sh")
+            with open(db_file, "a") as file:
+                file.write(f"""#!/bin/bash
+    sudo -u postgres PGPASSWORD="12345" psql -c "CREATE DATABASE {subdomain} OWNER postgres;"
+    sudo -u postgres PGPASSWORD="12345" psql -c "GRANT ALL PRIVILEGES ON DATABASE {subdomain} TO postgres;"
+    """)
 
-        with open(deploy_subdomain_logs, "a") as myfile:
-            myfile.write(',{"step" : 7, "message" : "Database creation file created: '+ db_file +' .techcamp.app"}')
+            with open(deploy_subdomain_logs, "a") as myfile:
+                myfile.write(',{"step" : 7, "message" : "Database creation file created: '+ db_file +' .techcamp.app"}')
 
-        print(f"Step 7: Database creation with Postgresql successful: {db_file}")
+            print(f"Step 7: Database creation with Postgresql successful: {db_file}")
+            
+        except OSError as e:
+            with open(deploy_subdomain_logs, "a") as myfile:
+                myfile.write(',{"step" : 7, "message" : "Error creating Database with Postgresql for '+subdomain +' .techcamp.app"}')
+
+            print(f"Step 7: Error creating  Database with Postgresql for {subdomain}: {e}")
+    else:
+        try:
+            db_file = os.path.join("../db-create", subdomain +".sh")
+            with open(db_file, "a") as file:
+                file.write(f"""#!/bin/bash
+                           echo "No database creation file created for {subdomain}.techcamp.app"
+                           """)
+
+            with open(deploy_subdomain_logs, "a") as myfile:
+                myfile.write(',{"step" : 7, "message" : "Skipping Database creation file created: '+ db_file +' .techcamp.app"}')
+
+            print(f"Step 7: Skipping Database creation with Postgresql successful: {db_file}")
+            
+        except OSError as e:
+            with open(deploy_subdomain_logs, "a") as myfile:
+                myfile.write(',{"step" : 7, "message" : "Error skipping creating Database with Postgresql for '+subdomain +' .techcamp.app"}')
+
+            print(f"Step 7: Error skipping creating  Database with Postgresql for {subdomain}: {e}")
         
-    except OSError as e:
-        with open(deploy_subdomain_logs, "a") as myfile:
-            myfile.write(',{"step" : 7, "message" : "Error creating Database with Postgresql for '+subdomain +' .techcamp.app"}')
-
-        print(f"Step 7: Error creating  Database with Postgresql for {subdomain}: {e}")
 
 
     #Close Log file and RETURN BACK TO ROUTE
