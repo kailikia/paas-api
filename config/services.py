@@ -478,12 +478,12 @@ sudo -u postgres PGPASSWORD="12345" psql -c "GRANT ALL PRIVILEGES ON DATABASE {s
 """)
 
         with open(deploy_subdomain_logs, "a") as myfile:
-            myfile.write(',{"step" : 7, "message" : "Database creation file created: {db_file}"}')
+            myfile.write(',{"step" : 7, "message" : "Database creation file created: '+ db_file +' .techcamp.app"}')
         print(f"Step 7: Database creation with Postgresql successful: {db_file}")
         
     except OSError as e:
         with open(deploy_subdomain_logs, "a") as myfile:
-            myfile.write(',{"step" : 7, "message" : "Error creating Database with Postgresql"}')
+            myfile.write(',{"step" : 7, "message" : "Error creating Database with Postgresql for '+subdomain +' .techcamp.app"}')
 
         print(f"Step 7: Error creating  Database with Postgresql for {subdomain}: {e}")
 
