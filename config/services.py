@@ -291,12 +291,15 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
             """)): "configure_nginx"
         }
 
+        logs = [
+            {"task": future_tasks[future], "status": "success", "result": result}
+            if not isinstance(result := future.result(), Exception)
+            else {"task": future_tasks[future], "status": "failed", "error": str(result)}
+            for future in concurrent.futures.as_completed(future_tasks)
+        ]
+
         # Process all futures using list comprehension
-        log_entries.extend(
-            [{"task": future_tasks[future], "status": "success" if (result := future.result()) else "failed"} if not isinstance(result, Exception)
-             else {"task": future_tasks[future], "status": "failed", "error": str(result)}
-             for future in as_completed(future_tasks)]
-        )
+        log_entries.extend(logs)
 
     # Write log once at the end
     with open(deploy_subdomain_logs, "w") as myfile:
