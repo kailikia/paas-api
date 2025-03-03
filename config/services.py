@@ -255,6 +255,7 @@ def set_permissions(subdomain):
 def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
     cur_path = "/app/deployed_apps"
     os.chdir(cur_path)
+
     clone_path = os.path.join(subdomain)
 
     deploy_subdomain_logs = os.path.join("../deployed_apps_logs", subdomain + ".json")
@@ -273,6 +274,8 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
     # Write server logs at the start
     with open(deploy_server_logs, "w") as servfile:
         json.dump(server_file, servfile, indent=4)
+
+    print("--------------------------------------------clone path------", clone_path)
 
     # Initialize concurrent tasks
     with ThreadPoolExecutor(max_workers=5) as executor:
