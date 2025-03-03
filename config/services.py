@@ -238,6 +238,20 @@ def delete_subdomain_and_apps_by_name(subdomain_name):
 
 
 #--------------------------------------------------------------------------------------------- Deploy and Server Functions 
+def remove_git_folder(subdomain):
+    """Removes the .git folder if it exists."""
+    git_path = os.path.join(subdomain, ".git")
+    if os.path.exists(git_path):
+        shutil.rmtree(git_path)
+    return {"task": "remove_git_folder", "status": "success"}
+
+def set_permissions(subdomain):
+    """Sets the required permissions for the subdomain folder."""
+    subdomain_path = os.path.join(subdomain)
+    if os.path.exists(subdomain_path):
+        os.chmod(subdomain_path, 0o777)
+    return {"task": "set_permissions", "status": "success"}
+
 def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
     cur_path = "/app/deployed_apps"
     os.chdir(cur_path)
@@ -264,7 +278,9 @@ def deploy_html_by_ssh_subprocess(github_url, subdomain, user, choice):
     with ThreadPoolExecutor(max_workers=5) as executor:
         future_tasks = {
             executor.submit(lambda: subprocess.run(f"git clone --depth 1 {github_url} {clone_path}", shell=True).returncode == 0): "clone_repo",
-            executor.submit(lambda: (shutil.rmtree(os.path.join(subdomain, '.git')) if os.path.exists(os.path.join(subdomain, '.git')) else None, os.chmod(os.path.join(subdomain), 0o777))): "setup_permissions",
+            # executor.submit(lambda: (shutil.rmtree(os.path.join(subdomain, '.git')) if os.path.exists(os.path.join(subdomain, '.git')) else None, os.chmod(os.path.join(subdomain), 0o777))): "setup_permissions",
+            executor.submit(remove_git_folder, subdomain): "remove_git_folder",
+            executor.submit(set_permissions, subdomain): "set_permissions", 
             executor.submit(lambda: subprocess.run(f"cp {'/app/html_apps_requirements/Dockerfile' if choice == 'html' else '/app/flask_apps_requirements/*'} /app/deployed_apps/{subdomain}", shell=True).returncode == 0): "copy_dockerfile",
             executor.submit(lambda: (open(f"../db-create/{subdomain}.sh", "w").write(f'sudo -u postgres PGPASSWORD="12345" psql -c "CREATE DATABASE {subdomain} OWNER postgres; GRANT ALL PRIVILEGES ON DATABASE {subdomain} TO postgres;"') if choice == 'flask' else None)): "create_database",
             executor.submit(lambda: open(f"../deployed_nginx_files/{subdomain}.techcamp.app", "w").write(f"""
